@@ -289,7 +289,7 @@ const App: React.FC = () => {
               className={`params-toggle ${showParams ? 'active' : ''}`}
               onClick={() => setShowParams(!showParams)}
             >
-              {showParams ? 'HIDE PARAMS' : 'SHOW PARAMS'}
+              {showParams ? 'HIDE PARAMETERS' : 'SHOW PARAMETERS'}
             </button>
           </div>
           {showParams && (
