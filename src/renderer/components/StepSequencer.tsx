@@ -7,6 +7,7 @@ interface StepSequencerProps {
   currentStep: number;
   selectedTrack: number;
   onStepToggle: (trackIndex: number, stepIndex: number) => void;
+  onSelectTrack: (trackIndex: number) => void;
   mode: 'sequencer' | 'pad';
   onPadTrigger: (trackIndex: number) => void;
 }
@@ -16,6 +17,7 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
   currentStep,
   selectedTrack,
   onStepToggle,
+  onSelectTrack,
   mode,
   onPadTrigger,
 }) => {
@@ -41,32 +43,31 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
 
   return (
     <div className="step-sequencer">
-      <div className="step-sequencer-header">
-        <div className="step-numbers">
-          {Array.from({ length: 16 }, (_, i) => (
-            <div key={i} className="step-number">
-              {i + 1}
-            </div>
-          ))}
-        </div>
-      </div>
       <div className="step-grid">
         {tracks.map((track, trackIndex) => (
           <div
             key={track.id}
             className={`step-row ${trackIndex === selectedTrack ? 'selected' : ''}`}
           >
-            {track.steps.map((active, stepIndex) => (
-              <button
-                key={stepIndex}
-                className={`step-btn ${active ? 'active' : ''} ${
-                  stepIndex === currentStep ? 'current' : ''
-                } ${stepIndex % 4 === 0 ? 'beat' : ''}`}
-                onClick={() => onStepToggle(trackIndex, stepIndex)}
-              >
-                <div className="step-led" />
-              </button>
-            ))}
+            <button
+              className={`track-label ${trackIndex === selectedTrack ? 'selected' : ''}`}
+              onClick={() => onSelectTrack(trackIndex)}
+            >
+              {track.name}
+            </button>
+            <div className="step-buttons">
+              {track.steps.map((active, stepIndex) => (
+                <button
+                  key={stepIndex}
+                  className={`step-btn ${active ? 'active' : ''} ${
+                    stepIndex === currentStep ? 'current' : ''
+                  } ${stepIndex % 4 === 0 ? 'beat' : ''}`}
+                  onClick={() => onStepToggle(trackIndex, stepIndex)}
+                >
+                  <div className="step-led" />
+                </button>
+              ))}
+            </div>
           </div>
         ))}
       </div>

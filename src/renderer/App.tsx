@@ -6,7 +6,6 @@ import { Pattern, DrumTrack } from './types';
 import Header from './components/Header';
 import StepSequencer from './components/StepSequencer';
 import Transport from './components/Transport';
-import TrackControls from './components/TrackControls';
 import TrackParams from './components/TrackParams';
 import './styles/App.css';
 
@@ -251,18 +250,6 @@ const App: React.FC = () => {
     setPattern(newPattern);
   };
 
-  const handleTrackMute = (trackIndex: number) => {
-    const newPattern = { ...pattern };
-    newPattern.tracks[trackIndex].muted = !newPattern.tracks[trackIndex].muted;
-    setPattern(newPattern);
-  };
-
-  const handleTrackSolo = (trackIndex: number) => {
-    const newPattern = { ...pattern };
-    newPattern.tracks[trackIndex].solo = !newPattern.tracks[trackIndex].solo;
-    setPattern(newPattern);
-  };
-
   const handleParamChange = (param: keyof DrumTrack, value: number) => {
     const newPattern = { ...pattern };
     (newPattern.tracks[selectedTrack] as any)[param] = value;
@@ -309,13 +296,6 @@ const App: React.FC = () => {
     <div className="app">
       <Header />
       <div className="main-content">
-        <TrackControls
-          tracks={pattern.tracks}
-          selectedTrack={selectedTrack}
-          onSelectTrack={setSelectedTrack}
-          onMute={handleTrackMute}
-          onSolo={handleTrackSolo}
-        />
         <div className="center-section">
           <div className="sequencer-container">
             <div className="mode-toggle-container">
@@ -331,6 +311,7 @@ const App: React.FC = () => {
               currentStep={currentStep}
               selectedTrack={selectedTrack}
               onStepToggle={handleStepToggle}
+              onSelectTrack={setSelectedTrack}
               mode={mode}
               onPadTrigger={handlePadTrigger}
             />
