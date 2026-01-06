@@ -5,12 +5,14 @@ import './StepSequencer.css';
 interface StepSequencerProps {
   tracks: DrumTrack[];
   currentStep: number;
+  selectedTrack: number;
   onStepToggle: (trackIndex: number, stepIndex: number) => void;
 }
 
 const StepSequencer: React.FC<StepSequencerProps> = ({
   tracks,
   currentStep,
+  selectedTrack,
   onStepToggle,
 }) => {
   return (
@@ -26,7 +28,10 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
       </div>
       <div className="step-grid">
         {tracks.map((track, trackIndex) => (
-          <div key={track.id} className="step-row">
+          <div
+            key={track.id}
+            className={`step-row ${trackIndex === selectedTrack ? 'selected' : ''}`}
+          >
             {track.steps.map((active, stepIndex) => (
               <button
                 key={stepIndex}

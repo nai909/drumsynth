@@ -283,6 +283,7 @@ const App: React.FC = () => {
             <StepSequencer
               tracks={pattern.tracks}
               currentStep={currentStep}
+              selectedTrack={selectedTrack}
               onStepToggle={handleStepToggle}
             />
             <button

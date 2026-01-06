@@ -40,6 +40,14 @@
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   gap: 3px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.step-row.selected {
+  background: rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.4);
 }
 
 .step-btn {
