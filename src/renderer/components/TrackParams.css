@@ -1,7 +1,7 @@
 .track-params {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
-  padding: 15px;
+  padding: 10px;
   min-width: 250px;
   max-width: 100%;
   width: 100%;
@@ -21,13 +21,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 2px solid rgba(168, 85, 247, 0.3);
 }
 
 .track-params-title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   color: #a855f7;
   margin: 0;
@@ -48,13 +48,13 @@
 .params-grid {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 12px;
 }
 
 .param-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 15px;
+  gap: 10px;
 }
 
 .param-pan {
@@ -76,19 +76,19 @@
 .param-control {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 
 .param-label {
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   color: #888;
   text-transform: uppercase;
 }
 
 .param-slider {
-  height: 8px;
+  height: 6px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   outline: none;
@@ -109,8 +109,8 @@
 
 .param-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
   cursor: pointer;
@@ -129,8 +129,8 @@
 }
 
 .param-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
   cursor: pointer;
@@ -149,14 +149,14 @@
 }
 
 .param-value {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   color: #a855f7;
   text-align: right;
   background: rgba(168, 85, 247, 0.1);
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid rgba(168, 85, 247, 0.3);
-  min-width: 50px;
+  min-width: 45px;
   font-family: 'Courier New', monospace;
 }

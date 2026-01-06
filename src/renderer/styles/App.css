@@ -26,11 +26,10 @@
 }
 
 .sequencer-container {
-  flex: 1;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 0;
 }
 
 .params-toggle {
