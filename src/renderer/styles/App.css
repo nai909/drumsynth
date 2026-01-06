@@ -35,34 +35,43 @@
 .mode-toggle-container {
   display: flex;
   justify-content: center;
+  gap: 0;
 }
 
 .mode-toggle {
-  padding: 10px 24px;
-  background: rgba(168, 85, 247, 0.1);
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
   border: 2px solid rgba(168, 85, 247, 0.3);
-  border-radius: 8px;
-  color: #a855f7;
-  font-size: 12px;
+  color: #888;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   cursor: pointer;
   transition: all 0.2s;
   touch-action: manipulation;
-  min-width: 140px;
+  min-width: 100px;
 }
 
-.mode-toggle:hover {
-  background: rgba(168, 85, 247, 0.2);
-  border-color: #a855f7;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+.mode-toggle:first-child {
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.mode-toggle:last-child {
+  border-radius: 0 8px 8px 0;
+  border-left: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.mode-toggle:hover:not(.active) {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
 }
 
 .mode-toggle.active {
-  background: rgba(168, 85, 247, 0.25);
-  border-color: #c084fc;
+  background: rgba(168, 85, 247, 0.3);
+  border-color: #a855f7;
   color: #c084fc;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
 }
 
 .params-toggle {

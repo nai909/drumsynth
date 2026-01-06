@@ -300,10 +300,16 @@ const App: React.FC = () => {
           <div className="sequencer-container">
             <div className="mode-toggle-container">
               <button
-                className={`mode-toggle ${mode === 'pad' ? 'active' : ''}`}
-                onClick={() => setMode(mode === 'sequencer' ? 'pad' : 'sequencer')}
+                className={`mode-toggle ${mode === 'sequencer' ? 'active' : ''}`}
+                onClick={() => setMode('sequencer')}
               >
-                {mode === 'sequencer' ? 'SEQUENCER' : 'PAD'}
+                SEQUENCER
+              </button>
+              <button
+                className={`mode-toggle ${mode === 'pad' ? 'active' : ''}`}
+                onClick={() => setMode('pad')}
+              >
+                PAD
               </button>
             </div>
             <StepSequencer
