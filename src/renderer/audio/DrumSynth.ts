@@ -96,68 +96,87 @@ export class DrumSynth {
 
   triggerSnare(time: number, velocity: number = 1, tune: number = 0, decay: number = 0.2, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
-      // 808-style snare: punchy body with tight noise
-      const noiseDecay = Math.max(0.08, decay * 0.4);
+      // Trap-style snare (Metro Boomin influence): hard-hitting, bright crack
+      const snareDecay = Math.max(0.08, decay * 0.35);
 
-      // Noise component - tight and snappy
-      const noise = new Tone.NoiseSynth({
-        noise: { type: 'white' },
-        envelope: {
-          attack: 0.002,
-          decay: noiseDecay,
-          sustain: 0,
-          release: 0.02,
-        },
-      });
+      const disposables: any[] = [];
 
-      // 808 snare body - pitched membrane with fast pitch decay
+      // Layer 1: Punchy body - tight pitched hit
       const body = new Tone.MembraneSynth({
-        pitchDecay: 0.03 + (snap * 0.02),
-        octaves: 2 + (tone * 2),
+        pitchDecay: 0.015 + (snap * 0.01),
+        octaves: 3,
         oscillator: { type: 'sine' },
         envelope: {
-          attack: 0.001,
-          decay: Math.max(0.06, decay * 0.25),
+          attack: 0.0005,
+          decay: Math.max(0.04, decay * 0.15),
           sustain: 0,
-          release: 0.02,
+          release: 0.01,
         },
       });
 
-      // Bandpass filter for noise to get that 808 character
-      const noiseFilter = new Tone.Filter({
-        frequency: Math.max(2000, Math.min(8000, filterCutoff * 5000 + 2000)),
-        type: 'bandpass',
-        Q: Math.max(0.5, Math.min(3, 1 + filterResonance * 2)),
+      // Layer 2: Cracking noise - bright and aggressive
+      const crack = new Tone.NoiseSynth({
+        noise: { type: 'white' },
+        envelope: {
+          attack: 0.0005,
+          decay: snareDecay,
+          sustain: 0,
+          release: 0.015,
+        },
       });
 
-      // Lowpass on body
-      const bodyFilter = new Tone.Filter({
-        frequency: Math.max(200, Math.min(4000, filterCutoff * 2000 + 500)),
-        type: 'lowpass',
+      // Layer 3: High-end sizzle for that trap brightness
+      const sizzle = new Tone.NoiseSynth({
+        noise: { type: 'white' },
+        envelope: {
+          attack: 0.001,
+          decay: snareDecay * 0.6,
+          sustain: 0,
+          release: 0.01,
+        },
+      });
+
+      // Highpass for crack - removes mud, keeps the snap
+      const crackFilter = new Tone.Filter({
+        frequency: Math.max(1500, Math.min(6000, filterCutoff * 3000 + 1500)),
+        type: 'highpass',
+        Q: Math.max(0.5, Math.min(2, 1 + filterResonance)),
+      });
+
+      // Very high pass for sizzle layer
+      const sizzleFilter = new Tone.Filter({
+        frequency: Math.max(6000, Math.min(12000, 8000 + (tone * 3000))),
+        type: 'highpass',
         Q: 1,
       });
 
-      const distortion = new Tone.Distortion(Math.max(0, Math.min(0.8, drive * 0.5)));
+      // Bandpass on body for focused punch
+      const bodyFilter = new Tone.Filter({
+        frequency: Math.max(150, Math.min(400, 200 + (tune * 50))),
+        type: 'bandpass',
+        Q: 2,
+      });
+
+      // Saturation for that aggressive trap character
+      const distortion = new Tone.Distortion(Math.max(0.1, Math.min(0.6, 0.15 + drive * 0.4)));
       const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
-      const merger = new Tone.Gain(0.9);
+      const merger = new Tone.Gain(0.85);
 
       body.chain(bodyFilter, merger);
-      noise.chain(noiseFilter, merger);
+      crack.chain(crackFilter, merger);
+      sizzle.chain(sizzleFilter, merger);
       merger.chain(distortion, panner, this.masterGain);
 
-      // 808 snare pitch around 180-240Hz
-      const pitch = Tone.Frequency(180 + (tune * 60));
-      body.triggerAttackRelease(pitch, '32n', time, Math.max(0.3, Math.min(1, velocity)));
-      noise.triggerAttackRelease(noiseDecay + 0.02, time, Math.max(0.2, Math.min(0.7, velocity * 0.6)));
+      disposables.push(body, crack, sizzle, bodyFilter, crackFilter, sizzleFilter, distortion, panner, merger);
+
+      // Trigger all layers
+      const bodyPitch = Tone.Frequency(200 + (tune * 40));
+      body.triggerAttackRelease(bodyPitch, '64n', time, Math.max(0.5, Math.min(1, velocity)));
+      crack.triggerAttackRelease(snareDecay, time, Math.max(0.4, Math.min(1, velocity * 0.9)));
+      sizzle.triggerAttackRelease(snareDecay * 0.5, time, Math.max(0.2, Math.min(0.5, velocity * tone * 0.6)));
 
       setTimeout(() => {
-        noise.dispose();
-        body.dispose();
-        noiseFilter.dispose();
-        bodyFilter.dispose();
-        distortion.dispose();
-        panner.dispose();
-        merger.dispose();
+        disposables.forEach(d => d.dispose());
       }, 1000);
     } catch (error) {
       console.error('Snare error:', error);
