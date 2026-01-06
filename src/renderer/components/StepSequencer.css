@@ -31,10 +31,15 @@
 }
 
 .drum-pad:active {
-  background: linear-gradient(145deg, rgba(168, 85, 247, 0.5), rgba(168, 85, 247, 0.3));
-  border-color: #a855f7;
-  box-shadow: 0 0 30px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(168, 85, 247, 0.2);
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.5), rgba(16, 185, 129, 0.3));
+  border-color: #10b981;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.3);
   transform: scale(0.97);
+}
+
+.drum-pad:active .drum-pad-name {
+  color: #34d399;
+  text-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
 }
 
 .drum-pad.selected {
