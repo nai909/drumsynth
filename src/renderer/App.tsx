@@ -182,6 +182,9 @@ const createInitialPattern = (): Pattern => {
   };
 };
 
+const THEMES = ['purple', 'blue', 'red', 'orange', 'green', 'cyan', 'pink'] as const;
+type Theme = typeof THEMES[number];
+
 const App: React.FC = () => {
   const [pattern, setPattern] = useState<Pattern>(createInitialPattern());
   const [isPlaying, setIsPlaying] = useState(false);
@@ -189,9 +192,23 @@ const App: React.FC = () => {
   const [selectedTrack, setSelectedTrack] = useState(0);
   const [showParams, setShowParams] = useState(false);
   const [mode, setMode] = useState<'sequencer' | 'pad'>('sequencer');
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('drumsynth-theme');
+    return (saved as Theme) || 'purple';
+  });
 
   const drumSynthRef = useRef<DrumSynth | null>(null);
   const sequencerRef = useRef<Sequencer | null>(null);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (theme === 'purple') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    localStorage.setItem('drumsynth-theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     drumSynthRef.current = new DrumSynth();
@@ -314,6 +331,17 @@ const App: React.FC = () => {
               >
                 PAD
               </button>
+            </div>
+            <div className="theme-selector">
+              {THEMES.map((t) => (
+                <button
+                  key={t}
+                  className={`theme-btn ${theme === t ? 'active' : ''}`}
+                  data-theme={t}
+                  onClick={() => setTheme(t)}
+                  aria-label={`${t} theme`}
+                />
+              ))}
             </div>
             <StepSequencer
               tracks={pattern.tracks}
