@@ -37,6 +37,12 @@
   transform: scale(0.97);
 }
 
+.drum-pad.selected {
+  background: linear-gradient(145deg, rgba(168, 85, 247, 0.3), rgba(168, 85, 247, 0.15));
+  border-color: #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
 .drum-pad-name {
   color: #c084fc;
   font-size: 14px;

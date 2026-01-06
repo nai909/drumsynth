@@ -27,10 +27,14 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
         {tracks.map((track, trackIndex) => (
           <button
             key={track.id}
-            className="drum-pad"
-            onClick={() => onPadTrigger(trackIndex)}
+            className={`drum-pad ${trackIndex === selectedTrack ? 'selected' : ''}`}
+            onClick={() => {
+              onSelectTrack(trackIndex);
+              onPadTrigger(trackIndex);
+            }}
             onTouchStart={(e) => {
               e.preventDefault();
+              onSelectTrack(trackIndex);
               onPadTrigger(trackIndex);
             }}
           >
