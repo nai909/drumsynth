@@ -256,7 +256,7 @@ const App: React.FC = () => {
     setPattern(newPattern);
   };
 
-  const handlePadTrigger = async (trackIndex: number) => {
+  const handlePadTrigger = async (trackIndex: number, velocity: number = 0.8) => {
     if (!drumSynthRef.current) return;
     await drumSynthRef.current.init();
 
@@ -264,30 +264,33 @@ const App: React.FC = () => {
     const time = Tone.now();
     const { volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive } = track;
 
+    // Combine track volume with touch velocity
+    const finalVelocity = volume * velocity;
+
     switch (track.soundEngine) {
       case 'kick':
-        drumSynthRef.current.triggerKick(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerKick(time, finalVelocity, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'snare':
-        drumSynthRef.current.triggerSnare(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerSnare(time, finalVelocity, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'hihat-closed':
-        drumSynthRef.current.triggerHiHat(time, volume, false, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerHiHat(time, finalVelocity, false, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'hihat-open':
-        drumSynthRef.current.triggerHiHat(time, volume, true, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerHiHat(time, finalVelocity, true, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'clap':
-        drumSynthRef.current.triggerClap(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerClap(time, finalVelocity, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'tom-low':
-        drumSynthRef.current.triggerTom(time, volume, 'G2', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerTom(time, finalVelocity, 'G2', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'tom-mid':
-        drumSynthRef.current.triggerTom(time, volume, 'C3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerTom(time, finalVelocity, 'C3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
       case 'tom-high':
-        drumSynthRef.current.triggerTom(time, volume, 'F3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        drumSynthRef.current.triggerTom(time, finalVelocity, 'F3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
         break;
     }
   };

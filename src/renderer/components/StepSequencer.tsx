@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { DrumTrack } from '../types';
 import './StepSequencer.css';
 
@@ -9,7 +9,7 @@ interface StepSequencerProps {
   onStepToggle: (trackIndex: number, stepIndex: number) => void;
   onSelectTrack: (trackIndex: number) => void;
   mode: 'sequencer' | 'pad';
-  onPadTrigger: (trackIndex: number) => void;
+  onPadTrigger: (trackIndex: number, velocity?: number) => void;
 }
 
 const StepSequencer: React.FC<StepSequencerProps> = ({
@@ -21,6 +21,24 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
   mode,
   onPadTrigger,
 }) => {
+  const touchedRef = useRef<boolean>(false);
+
+  const handlePadTrigger = useCallback((trackIndex: number, e?: React.TouchEvent) => {
+    onSelectTrack(trackIndex);
+
+    // Get velocity from touch force if available, otherwise default
+    let velocity = 0.8;
+    if (e && e.touches && e.touches[0]) {
+      const touch = e.touches[0] as any;
+      // Use force if available (Force Touch / 3D Touch)
+      if (touch.force && touch.force > 0) {
+        velocity = Math.min(1, 0.3 + touch.force * 0.7);
+      }
+    }
+
+    onPadTrigger(trackIndex, velocity);
+  }, [onSelectTrack, onPadTrigger]);
+
   if (mode === 'pad') {
     return (
       <div className="drum-pads">
@@ -29,13 +47,22 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
             key={track.id}
             className={`drum-pad ${trackIndex === selectedTrack ? 'selected' : ''}`}
             onClick={() => {
-              onSelectTrack(trackIndex);
-              onPadTrigger(trackIndex);
+              // Only trigger on click if not touched (prevents double trigger on mobile)
+              if (!touchedRef.current) {
+                handlePadTrigger(trackIndex);
+              }
+              touchedRef.current = false;
             }}
             onTouchStart={(e) => {
               e.preventDefault();
-              onSelectTrack(trackIndex);
-              onPadTrigger(trackIndex);
+              touchedRef.current = true;
+              handlePadTrigger(trackIndex, e);
+            }}
+            onTouchEnd={() => {
+              // Reset after a short delay to allow click to be blocked
+              setTimeout(() => {
+                touchedRef.current = false;
+              }, 100);
             }}
           >
             <span className="drum-pad-name">{track.name}</span>
