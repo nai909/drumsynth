@@ -19,38 +19,76 @@ export class DrumSynth {
 
   triggerKick(time: number, velocity: number = 1, tune: number = 0, decay: number = 0.4, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
+      // 808-style kick: deep sub bass with pitch sweep
+      // decay controls length: low = tight punch, high = long 808 boom
+      const kickDecay = Math.max(0.15, decay * 1.5);
+      const pitchSweepTime = 0.04 + (snap * 0.03);
+
+      // Main 808 body - pure sine sub bass
       const kick = new Tone.MembraneSynth({
-        pitchDecay: Math.max(0.01, decay * 0.1),
-        octaves: Math.max(1, 6 + (tone * 4)),
+        pitchDecay: pitchSweepTime,
+        octaves: 4 + (tone * 2),
         oscillator: { type: 'sine' },
         envelope: {
           attack: 0.001,
-          decay: Math.max(0.1, decay),
+          decay: kickDecay,
+          sustain: decay > 0.5 ? 0.1 : 0, // Long 808s have slight sustain
+          release: Math.max(0.05, decay * 0.3),
+        },
+      });
+
+      // Click/transient layer for attack
+      const click = new Tone.MembraneSynth({
+        pitchDecay: 0.02,
+        octaves: 8,
+        oscillator: { type: 'sine' },
+        envelope: {
+          attack: 0.001,
+          decay: 0.03 + (snap * 0.02),
           sustain: 0,
           release: 0.01,
         },
       });
 
+      // Low pass filter to keep it subby
       const filter = new Tone.Filter({
-        frequency: Math.max(100, Math.min(20000, filterCutoff * 8000 + 100)),
+        frequency: Math.max(60, Math.min(200, filterCutoff * 120 + 50)),
         type: 'lowpass',
-        Q: Math.max(0, Math.min(20, filterResonance * 15)),
+        Q: Math.max(0.5, Math.min(4, 1 + filterResonance * 2)),
       });
 
-      const distortion = new Tone.Distortion(Math.max(0, Math.min(1, drive)));
+      // Separate filter for click (allows more high end through)
+      const clickFilter = new Tone.Filter({
+        frequency: Math.max(500, Math.min(4000, filterCutoff * 2000 + 500)),
+        type: 'lowpass',
+        Q: 1,
+      });
+
+      // Warm saturation for that analog 808 character
+      const distortion = new Tone.Distortion(Math.max(0.02, Math.min(0.5, 0.05 + drive * 0.4)));
       const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
+      const merger = new Tone.Gain(0.9);
 
-      kick.chain(distortion, filter, panner, this.masterGain);
+      kick.chain(filter, merger);
+      click.chain(clickFilter, merger);
+      merger.chain(distortion, panner, this.masterGain);
 
-      const basePitch = Tone.Frequency('C1').transpose(tune * 24);
-      kick.triggerAttackRelease(basePitch, '8n', time, Math.max(0, Math.min(1, velocity)));
+      // 808 kick pitch - around 45-60Hz base
+      const basePitch = Tone.Frequency(48 + (tune * 20));
+      const clickPitch = Tone.Frequency(150 + (tune * 30));
+
+      kick.triggerAttackRelease(basePitch, kickDecay + 0.1, time, Math.max(0.4, Math.min(1, velocity)));
+      click.triggerAttackRelease(clickPitch, 0.05, time, Math.max(0.2, Math.min(0.6, velocity * snap)));
 
       setTimeout(() => {
         kick.dispose();
+        click.dispose();
         filter.dispose();
+        clickFilter.dispose();
         distortion.dispose();
         panner.dispose();
-      }, 1500);
+        merger.dispose();
+      }, Math.max(2000, kickDecay * 1000 + 500));
     } catch (error) {
       console.error('Kick error:', error);
     }
