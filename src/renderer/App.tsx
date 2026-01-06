@@ -187,6 +187,7 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState(0);
+  const [showParams, setShowParams] = useState(false);
 
   const drumSynthRef = useRef<DrumSynth | null>(null);
   const sequencerRef = useRef<Sequencer | null>(null);
@@ -278,15 +279,25 @@ const App: React.FC = () => {
           onSolo={handleTrackSolo}
         />
         <div className="center-section">
-          <StepSequencer
-            tracks={pattern.tracks}
-            currentStep={currentStep}
-            onStepToggle={handleStepToggle}
-          />
-          <TrackParams
-            track={pattern.tracks[selectedTrack]}
-            onParamChange={handleParamChange}
-          />
+          <div className="sequencer-container">
+            <StepSequencer
+              tracks={pattern.tracks}
+              currentStep={currentStep}
+              onStepToggle={handleStepToggle}
+            />
+            <button
+              className={`params-toggle ${showParams ? 'active' : ''}`}
+              onClick={() => setShowParams(!showParams)}
+            >
+              {showParams ? 'HIDE PARAMS' : 'SHOW PARAMS'}
+            </button>
+          </div>
+          {showParams && (
+            <TrackParams
+              track={pattern.tracks[selectedTrack]}
+              onParamChange={handleParamChange}
+            />
+          )}
         </div>
       </div>
       <Transport
