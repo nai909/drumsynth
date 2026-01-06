@@ -6,8 +6,7 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="header-content">
         <div className="logo">
-          <div className="logo-text">TR-1000</div>
-          <div className="logo-subtitle">DRUM SYNTH</div>
+          <div className="logo-text">IZ DRUM MACHINE</div>
         </div>
         <div className="header-info">
           <div className="pattern-info">Pattern 1</div>
