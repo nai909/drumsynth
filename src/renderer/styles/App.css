@@ -39,10 +39,10 @@
 
 .mode-toggle {
   padding: 10px 24px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 2px solid rgba(16, 185, 129, 0.3);
+  background: rgba(168, 85, 247, 0.1);
+  border: 2px solid rgba(168, 85, 247, 0.3);
   border-radius: 8px;
-  color: #10b981;
+  color: #a855f7;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -53,16 +53,16 @@
 }
 
 .mode-toggle:hover {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+  background: rgba(168, 85, 247, 0.2);
+  border-color: #a855f7;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
 }
 
 .mode-toggle.active {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: #f59e0b;
-  color: #f59e0b;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+  background: rgba(168, 85, 247, 0.25);
+  border-color: #c084fc;
+  color: #c084fc;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
 .params-toggle {

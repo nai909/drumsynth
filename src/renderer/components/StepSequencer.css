@@ -1,3 +1,64 @@
+/* Drum Pads Mode */
+.drum-pads {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  min-height: 300px;
+}
+
+.drum-pad {
+  background: linear-gradient(145deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+  border: 3px solid rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.drum-pad:hover {
+  background: linear-gradient(145deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.1));
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.drum-pad:active {
+  background: linear-gradient(145deg, rgba(168, 85, 247, 0.5), rgba(168, 85, 247, 0.3));
+  border-color: #a855f7;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(168, 85, 247, 0.2);
+  transform: scale(0.97);
+}
+
+.drum-pad-name {
+  color: #c084fc;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+@media (max-width: 768px) {
+  .drum-pads {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    min-height: 400px;
+  }
+
+  .drum-pad-name {
+    font-size: 12px;
+  }
+}
+
+/* Step Sequencer Mode */
 .step-sequencer {
   flex: 1;
   background: rgba(0, 0, 0, 0.3);
@@ -95,28 +156,6 @@
 .step-btn.current.active {
   border-color: #10b981;
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.8), 0 0 20px rgba(16, 185, 129, 0.6);
-}
-
-.step-btn.pad-mode {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
-.step-btn.pad-mode:hover {
-  background: rgba(245, 158, 11, 0.25);
-  border-color: rgba(245, 158, 11, 0.5);
-}
-
-.step-btn.pad-mode:active {
-  background: rgba(245, 158, 11, 0.4);
-  border-color: #f59e0b;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-  transform: scale(0.95);
-}
-
-.step-btn.pad-mode.active {
-  background: rgba(245, 158, 11, 0.3);
-  border-color: #f59e0b;
 }
 
 .step-led {

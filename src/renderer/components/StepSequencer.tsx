@@ -19,6 +19,26 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
   mode,
   onPadTrigger,
 }) => {
+  if (mode === 'pad') {
+    return (
+      <div className="drum-pads">
+        {tracks.map((track, trackIndex) => (
+          <button
+            key={track.id}
+            className="drum-pad"
+            onClick={() => onPadTrigger(trackIndex)}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              onPadTrigger(trackIndex);
+            }}
+          >
+            <span className="drum-pad-name">{track.name}</span>
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="step-sequencer">
       <div className="step-sequencer-header">
@@ -41,20 +61,8 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
                 key={stepIndex}
                 className={`step-btn ${active ? 'active' : ''} ${
                   stepIndex === currentStep ? 'current' : ''
-                } ${stepIndex % 4 === 0 ? 'beat' : ''} ${mode === 'pad' ? 'pad-mode' : ''}`}
-                onClick={() => {
-                  if (mode === 'sequencer') {
-                    onStepToggle(trackIndex, stepIndex);
-                  } else {
-                    onPadTrigger(trackIndex);
-                  }
-                }}
-                onTouchStart={(e) => {
-                  if (mode === 'pad') {
-                    e.preventDefault();
-                    onPadTrigger(trackIndex);
-                  }
-                }}
+                } ${stepIndex % 4 === 0 ? 'beat' : ''}`}
+                onClick={() => onStepToggle(trackIndex, stepIndex)}
               >
                 <div className="step-led" />
               </button>
