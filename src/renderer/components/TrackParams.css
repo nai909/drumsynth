@@ -1,12 +1,20 @@
 .track-params {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   min-width: 250px;
   max-width: 100%;
   width: 100%;
-  resize: vertical;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .track-params {
+    padding: 10px;
+    min-width: 100%;
+  }
 }
 
 .track-params-header {
@@ -80,16 +88,23 @@
 }
 
 .param-slider {
-  height: 6px;
+  height: 8px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 4px;
   outline: none;
   -webkit-appearance: none;
   transition: background 0.2s;
+  touch-action: none;
 }
 
 .param-slider:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+  .param-slider {
+    height: 12px;
+  }
 }
 
 .param-slider::-webkit-slider-thumb {
