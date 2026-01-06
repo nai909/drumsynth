@@ -32,6 +32,39 @@
   gap: 10px;
 }
 
+.mode-toggle-container {
+  display: flex;
+  justify-content: center;
+}
+
+.mode-toggle {
+  padding: 10px 24px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  color: #10b981;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  touch-action: manipulation;
+  min-width: 140px;
+}
+
+.mode-toggle:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.mode-toggle.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #f59e0b;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+
 .params-toggle {
   width: 100%;
   padding: 12px;

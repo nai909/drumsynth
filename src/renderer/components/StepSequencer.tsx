@@ -7,6 +7,8 @@ interface StepSequencerProps {
   currentStep: number;
   selectedTrack: number;
   onStepToggle: (trackIndex: number, stepIndex: number) => void;
+  mode: 'sequencer' | 'pad';
+  onPadTrigger: (trackIndex: number) => void;
 }
 
 const StepSequencer: React.FC<StepSequencerProps> = ({
@@ -14,6 +16,8 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
   currentStep,
   selectedTrack,
   onStepToggle,
+  mode,
+  onPadTrigger,
 }) => {
   return (
     <div className="step-sequencer">
@@ -37,8 +41,20 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
                 key={stepIndex}
                 className={`step-btn ${active ? 'active' : ''} ${
                   stepIndex === currentStep ? 'current' : ''
-                } ${stepIndex % 4 === 0 ? 'beat' : ''}`}
-                onClick={() => onStepToggle(trackIndex, stepIndex)}
+                } ${stepIndex % 4 === 0 ? 'beat' : ''} ${mode === 'pad' ? 'pad-mode' : ''}`}
+                onClick={() => {
+                  if (mode === 'sequencer') {
+                    onStepToggle(trackIndex, stepIndex);
+                  } else {
+                    onPadTrigger(trackIndex);
+                  }
+                }}
+                onTouchStart={(e) => {
+                  if (mode === 'pad') {
+                    e.preventDefault();
+                    onPadTrigger(trackIndex);
+                  }
+                }}
               >
                 <div className="step-led" />
               </button>

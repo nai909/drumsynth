@@ -97,6 +97,28 @@
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.8), 0 0 20px rgba(16, 185, 129, 0.6);
 }
 
+.step-btn.pad-mode {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.step-btn.pad-mode:hover {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.step-btn.pad-mode:active {
+  background: rgba(245, 158, 11, 0.4);
+  border-color: #f59e0b;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+  transform: scale(0.95);
+}
+
+.step-btn.pad-mode.active {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: #f59e0b;
+}
+
 .step-led {
   width: 50%;
   height: 50%;

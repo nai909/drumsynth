@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as Tone from 'tone';
 import { DrumSynth } from './audio/DrumSynth';
 import { Sequencer } from './audio/Sequencer';
 import { Pattern, DrumTrack } from './types';
@@ -188,6 +189,7 @@ const App: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState(0);
   const [showParams, setShowParams] = useState(false);
+  const [mode, setMode] = useState<'sequencer' | 'pad'>('sequencer');
 
   const drumSynthRef = useRef<DrumSynth | null>(null);
   const sequencerRef = useRef<Sequencer | null>(null);
@@ -267,6 +269,42 @@ const App: React.FC = () => {
     setPattern(newPattern);
   };
 
+  const handlePadTrigger = async (trackIndex: number) => {
+    if (!drumSynthRef.current) return;
+    await drumSynthRef.current.init();
+
+    const track = pattern.tracks[trackIndex];
+    const time = Tone.now();
+    const { volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive } = track;
+
+    switch (track.soundEngine) {
+      case 'kick':
+        drumSynthRef.current.triggerKick(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'snare':
+        drumSynthRef.current.triggerSnare(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'hihat-closed':
+        drumSynthRef.current.triggerHiHat(time, volume, false, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'hihat-open':
+        drumSynthRef.current.triggerHiHat(time, volume, true, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'clap':
+        drumSynthRef.current.triggerClap(time, volume, tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'tom-low':
+        drumSynthRef.current.triggerTom(time, volume, 'G2', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'tom-mid':
+        drumSynthRef.current.triggerTom(time, volume, 'C3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+      case 'tom-high':
+        drumSynthRef.current.triggerTom(time, volume, 'F3', tune, decay, filterCutoff, pan, attack, tone, snap, filterResonance, drive);
+        break;
+    }
+  };
+
   return (
     <div className="app">
       <Header />
@@ -280,11 +318,21 @@ const App: React.FC = () => {
         />
         <div className="center-section">
           <div className="sequencer-container">
+            <div className="mode-toggle-container">
+              <button
+                className={`mode-toggle ${mode === 'pad' ? 'active' : ''}`}
+                onClick={() => setMode(mode === 'sequencer' ? 'pad' : 'sequencer')}
+              >
+                {mode === 'sequencer' ? 'SEQUENCER' : 'PAD'}
+              </button>
+            </div>
             <StepSequencer
               tracks={pattern.tracks}
               currentStep={currentStep}
               selectedTrack={selectedTrack}
               onStepToggle={handleStepToggle}
+              mode={mode}
+              onPadTrigger={handlePadTrigger}
             />
             <button
               className={`params-toggle ${showParams ? 'active' : ''}`}
