@@ -58,48 +58,65 @@ export class DrumSynth {
 
   triggerSnare(time: number, velocity: number = 1, tune: number = 0, decay: number = 0.2, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
+      // 808-style snare: punchy body with tight noise
+      const noiseDecay = Math.max(0.08, decay * 0.4);
+
+      // Noise component - tight and snappy
       const noise = new Tone.NoiseSynth({
-        noise: { type: tone > 0.5 ? 'white' : 'pink' },
+        noise: { type: 'white' },
         envelope: {
-          attack: 0.001,
-          decay: Math.max(0.05, decay),
+          attack: 0.002,
+          decay: noiseDecay,
           sustain: 0,
-          release: 0.01,
+          release: 0.02,
         },
       });
 
-      const bodyOsc = new Tone.Synth({
-        oscillator: { type: 'triangle' },
+      // 808 snare body - pitched membrane with fast pitch decay
+      const body = new Tone.MembraneSynth({
+        pitchDecay: 0.03 + (snap * 0.02),
+        octaves: 2 + (tone * 2),
+        oscillator: { type: 'sine' },
         envelope: {
           attack: 0.001,
-          decay: Math.max(0.05, decay * 0.3),
+          decay: Math.max(0.06, decay * 0.25),
           sustain: 0,
-          release: 0.01,
+          release: 0.02,
         },
       });
 
-      const filter = new Tone.Filter({
-        frequency: Math.max(100, Math.min(20000, filterCutoff * 8000 + 1000)),
-        type: 'highpass',
-        Q: Math.max(0, Math.min(20, filterResonance * 10)),
+      // Bandpass filter for noise to get that 808 character
+      const noiseFilter = new Tone.Filter({
+        frequency: Math.max(2000, Math.min(8000, filterCutoff * 5000 + 2000)),
+        type: 'bandpass',
+        Q: Math.max(0.5, Math.min(3, 1 + filterResonance * 2)),
       });
 
-      const distortion = new Tone.Distortion(Math.max(0, Math.min(1, drive)));
+      // Lowpass on body
+      const bodyFilter = new Tone.Filter({
+        frequency: Math.max(200, Math.min(4000, filterCutoff * 2000 + 500)),
+        type: 'lowpass',
+        Q: 1,
+      });
+
+      const distortion = new Tone.Distortion(Math.max(0, Math.min(0.8, drive * 0.5)));
       const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
-      const merger = new Tone.Gain(1);
+      const merger = new Tone.Gain(0.9);
 
-      bodyOsc.connect(merger);
-      noise.connect(merger);
-      merger.chain(distortion, filter, panner, this.masterGain);
+      body.chain(bodyFilter, merger);
+      noise.chain(noiseFilter, merger);
+      merger.chain(distortion, panner, this.masterGain);
 
-      const pitch = Tone.Frequency(200 + (tune * 100));
-      bodyOsc.triggerAttackRelease(pitch, '16n', time, Math.max(0, Math.min(1, velocity * tone)));
-      noise.triggerAttackRelease('16n', time, Math.max(0, Math.min(1, velocity)));
+      // 808 snare pitch around 180-240Hz
+      const pitch = Tone.Frequency(180 + (tune * 60));
+      body.triggerAttackRelease(pitch, '32n', time, Math.max(0.3, Math.min(1, velocity)));
+      noise.triggerAttackRelease(noiseDecay + 0.02, time, Math.max(0.2, Math.min(0.7, velocity * 0.6)));
 
       setTimeout(() => {
         noise.dispose();
-        bodyOsc.dispose();
-        filter.dispose();
+        body.dispose();
+        noiseFilter.dispose();
+        bodyFilter.dispose();
         distortion.dispose();
         panner.dispose();
         merger.dispose();
@@ -111,70 +128,90 @@ export class DrumSynth {
 
   triggerHiHat(time: number, velocity: number = 1, open: boolean = false, tune: number = 0, decay: number = 0.1, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
-      const actualDecay = open ? Math.max(0.2, decay * 4) : Math.max(0.04, decay);
+      // Trap-style hi-hat: bright, crispy, tight
+      const actualDecay = open ? Math.max(0.15, decay * 3) : Math.max(0.02, decay * 0.3);
 
-      // Use noise + oscillator mix for metallic hi-hat sound
+      // Main noise component - bright white noise
       const noise = new Tone.NoiseSynth({
         noise: { type: 'white' },
         envelope: {
-          attack: 0.001,
+          attack: 0.0005,
           decay: actualDecay,
           sustain: 0,
-          release: 0.01,
+          release: 0.008,
         },
       });
 
-      // Multiple oscillators for metallic character
+      // High-pitched oscillators for metallic shimmer
       const osc1 = new Tone.Oscillator({
-        frequency: 3140 * (1 + tune * 0.5),
+        frequency: 6000 * (1 + tune * 0.3),
         type: 'square',
       });
 
       const osc2 = new Tone.Oscillator({
-        frequency: 4050 * (1 + tune * 0.5),
+        frequency: 7500 * (1 + tune * 0.3),
+        type: 'square',
+      });
+
+      const osc3 = new Tone.Oscillator({
+        frequency: 9000 * (1 + tune * 0.3),
         type: 'square',
       });
 
       const env = new Tone.AmplitudeEnvelope({
-        attack: 0.001,
-        decay: actualDecay,
+        attack: 0.0005,
+        decay: actualDecay * 0.8,
         sustain: 0,
-        release: 0.01,
+        release: 0.005,
       });
 
-      const filter = new Tone.Filter({
-        frequency: Math.max(7000, Math.min(20000, filterCutoff * 10000 + 7000)),
+      // Highpass filter - very bright for trap sound
+      const highpass = new Tone.Filter({
+        frequency: Math.max(8000, Math.min(16000, filterCutoff * 6000 + 8000)),
         type: 'highpass',
-        Q: Math.max(1, Math.min(15, filterResonance * 10 + 1)),
+        Q: Math.max(0.5, Math.min(3, 1 + filterResonance)),
       });
 
-      const distortion = new Tone.Distortion(Math.max(0, Math.min(0.8, drive * 0.3)));
+      // Slight bandpass for character
+      const bandpass = new Tone.Filter({
+        frequency: Math.max(10000, Math.min(18000, 12000 + (tone * 4000))),
+        type: 'bandpass',
+        Q: 0.8,
+      });
+
+      // Light saturation for that crispy trap sound
+      const distortion = new Tone.Distortion(Math.max(0.05, Math.min(0.4, 0.1 + drive * 0.3)));
       const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
-      const gain = new Tone.Gain(0.3);
+      const gain = new Tone.Gain(open ? 0.35 : 0.4);
 
       osc1.connect(env);
       osc2.connect(env);
+      osc3.connect(env);
       noise.connect(gain);
       env.connect(gain);
-      gain.chain(distortion, filter, panner, this.masterGain);
+      gain.chain(highpass, bandpass, distortion, panner, this.masterGain);
 
       osc1.start(time);
       osc2.start(time);
-      env.triggerAttackRelease(actualDecay, time, Math.max(0.1, Math.min(1, velocity * 0.5)));
-      noise.triggerAttackRelease(actualDecay, time, Math.max(0.1, Math.min(1, velocity)));
+      osc3.start(time);
+      env.triggerAttackRelease(actualDecay, time, Math.max(0.2, Math.min(1, velocity * 0.4)));
+      noise.triggerAttackRelease(actualDecay, time, Math.max(0.3, Math.min(1, velocity)));
 
       setTimeout(() => {
         osc1.stop();
         osc2.stop();
+        osc3.stop();
         osc1.dispose();
         osc2.dispose();
+        osc3.dispose();
         env.dispose();
         noise.dispose();
-        filter.dispose();
+        highpass.dispose();
+        bandpass.dispose();
         distortion.dispose();
         panner.dispose();
         gain.dispose();
-      }, Math.max(500, actualDecay * 1000 + 100));
+      }, Math.max(300, actualDecay * 1000 + 100));
     } catch (error) {
       console.error('HiHat error:', error);
     }
@@ -182,34 +219,67 @@ export class DrumSynth {
 
   triggerClap(time: number, velocity: number = 1, tune: number = 0, decay: number = 0.15, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
-      const clap = new Tone.NoiseSynth({
-        noise: { type: 'pink' },
+      // 909-style clap: multiple layered noise bursts
+      const burstCount = 4;
+      const burstSpacing = 0.012; // ~12ms between each burst
+      const tailDecay = Math.max(0.12, decay * 0.8);
+
+      const disposables: any[] = [];
+
+      // Bandpass filter for 909 character (centered around 1-2kHz)
+      const filter = new Tone.Filter({
+        frequency: Math.max(800, Math.min(3000, filterCutoff * 1500 + 1000 + (tune * 300))),
+        type: 'bandpass',
+        Q: Math.max(0.8, Math.min(4, 1.2 + filterResonance * 2)),
+      });
+
+      // Highpass to remove low end
+      const highpass = new Tone.Filter({
+        frequency: 400 + (tone * 200),
+        type: 'highpass',
+        Q: 0.5,
+      });
+
+      const distortion = new Tone.Distortion(Math.max(0, Math.min(0.6, drive * 0.4)));
+      const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
+      const merger = new Tone.Gain(0.85);
+
+      merger.chain(highpass, filter, distortion, panner, this.masterGain);
+      disposables.push(filter, highpass, distortion, panner, merger);
+
+      // Create multiple noise bursts for the classic 909 clap sound
+      for (let i = 0; i < burstCount; i++) {
+        const burst = new Tone.NoiseSynth({
+          noise: { type: 'white' },
+          envelope: {
+            attack: 0.001,
+            decay: 0.008 + (i * 0.002), // Each burst slightly longer
+            sustain: 0,
+            release: 0.005,
+          },
+        });
+        burst.connect(merger);
+        burst.triggerAttackRelease(0.01, time + (i * burstSpacing), Math.max(0.3, Math.min(1, velocity * (1 - i * 0.1))));
+        disposables.push(burst);
+      }
+
+      // Reverb-like tail (final longer noise burst)
+      const tail = new Tone.NoiseSynth({
+        noise: { type: 'white' },
         envelope: {
           attack: 0.001,
-          decay: Math.max(0.05, decay),
+          decay: tailDecay,
           sustain: 0,
-          release: 0.01,
+          release: 0.05,
         },
       });
-
-      const filter = new Tone.Filter({
-        frequency: Math.max(500, Math.min(20000, (filterCutoff * 6000 + 1000) * (1 + tune * 0.3))),
-        type: 'bandpass',
-        Q: Math.max(1, Math.min(20, (filterResonance * 10) + (tone * 3))),
-      });
-
-      const distortion = new Tone.Distortion(Math.max(0, Math.min(1, drive)));
-      const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
-
-      clap.chain(distortion, filter, panner, this.masterGain);
-      clap.triggerAttackRelease('16n', time, Math.max(0, Math.min(1, velocity)));
+      tail.connect(merger);
+      tail.triggerAttackRelease(tailDecay, time + (burstCount * burstSpacing), Math.max(0.15, Math.min(0.5, velocity * 0.4)));
+      disposables.push(tail);
 
       setTimeout(() => {
-        clap.dispose();
-        filter.dispose();
-        distortion.dispose();
-        panner.dispose();
-      }, 1000);
+        disposables.forEach(d => d.dispose());
+      }, 1500);
     } catch (error) {
       console.error('Clap error:', error);
     }
