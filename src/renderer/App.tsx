@@ -367,11 +367,8 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <PsychedelicBackground />
-      {/* Header with theme smiley and signature */}
-      <div className="header-signature">
-        <ThemeSmiley onClick={handleThemeChange} />
-        <span className="app-title">IZ Drum Machine</span>
-      </div>
+      {/* Clickable theme smiley */}
+      <ThemeSmiley onClick={handleThemeChange} />
       <div className="main-content">
         <div className="center-section">
           <div className="sequencer-container">

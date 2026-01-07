@@ -59,6 +59,9 @@ const FloatingSmiley: React.FC<{ className: string }> = ({ className }) => (
 const PsychedelicBackground: React.FC = () => {
   return (
     <div className="psychedelic-bg">
+      {/* Floating credit */}
+      <div className="floating-credit">Made by IZ</div>
+
       {/* Background floating smileys */}
       <div className="smiley-container">
         <FloatingSmiley className="smiley-1" />
