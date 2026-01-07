@@ -3,11 +3,10 @@ import * as Tone from 'tone';
 import { DrumSynth } from './audio/DrumSynth';
 import { Sequencer } from './audio/Sequencer';
 import { Pattern, DrumTrack } from './types';
-import Header from './components/Header';
 import StepSequencer from './components/StepSequencer';
 import Transport from './components/Transport';
 import TrackParams from './components/TrackParams';
-import PsychedelicBackground from './components/PsychedelicBackground';
+import PsychedelicBackground, { Theme } from './components/PsychedelicBackground';
 import './styles/App.css';
 
 const createInitialPattern = (): Pattern => {
@@ -183,9 +182,6 @@ const createInitialPattern = (): Pattern => {
   };
 };
 
-const THEMES = ['purple', 'blue', 'red', 'orange', 'green', 'cyan', 'pink'] as const;
-type Theme = typeof THEMES[number];
-
 const App: React.FC = () => {
   const [pattern, setPattern] = useState<Pattern>(createInitialPattern());
   const [isPlaying, setIsPlaying] = useState(false);
@@ -328,8 +324,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <PsychedelicBackground />
-      <Header />
+      <PsychedelicBackground theme={theme} onThemeChange={setTheme} />
       <div className="main-content">
         <div className="center-section">
           <div className="sequencer-container">
@@ -346,17 +341,6 @@ const App: React.FC = () => {
               >
                 SEQUENCER
               </button>
-            </div>
-            <div className="theme-selector">
-              {THEMES.map((t) => (
-                <button
-                  key={t}
-                  className={`theme-btn ${theme === t ? 'active' : ''}`}
-                  data-theme={t}
-                  onClick={() => setTheme(t)}
-                  aria-label={`${t} theme`}
-                />
-              ))}
             </div>
             <StepSequencer
               tracks={pattern.tracks}

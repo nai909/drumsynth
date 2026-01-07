@@ -1,13 +1,61 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Header.css';
 
-const PsychedelicSmiley: React.FC = () => (
+const THEMES = ['purple', 'blue', 'red', 'orange', 'green', 'cyan', 'pink'] as const;
+type Theme = typeof THEMES[number];
+
+// Map hue values to theme names
+const HUE_TO_THEME: { hue: number; theme: Theme }[] = [
+  { hue: 280, theme: 'purple' },
+  { hue: 320, theme: 'pink' },
+  { hue: 0, theme: 'red' },
+  { hue: 30, theme: 'orange' },
+  { hue: 140, theme: 'green' },
+  { hue: 190, theme: 'cyan' },
+  { hue: 220, theme: 'blue' },
+];
+
+// Theme to hue mapping for slider position
+const THEME_TO_HUE: Record<Theme, number> = {
+  purple: 280,
+  pink: 320,
+  red: 0,
+  orange: 30,
+  green: 140,
+  cyan: 190,
+  blue: 220,
+};
+
+function findClosestTheme(hue: number): Theme {
+  let closest = HUE_TO_THEME[0];
+  let minDist = Infinity;
+
+  for (const entry of HUE_TO_THEME) {
+    // Handle circular hue distance
+    let dist = Math.abs(entry.hue - hue);
+    if (dist > 180) dist = 360 - dist;
+
+    if (dist < minDist) {
+      minDist = dist;
+      closest = entry;
+    }
+  }
+
+  return closest.theme;
+}
+
+interface PsychedelicSmileyProps {
+  onClick: () => void;
+}
+
+const PsychedelicSmiley: React.FC<PsychedelicSmileyProps> = ({ onClick }) => (
   <svg
-    className="psychedelic-smiley"
+    className="psychedelic-smiley clickable"
     viewBox="0 0 64 80"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     style={{ overflow: 'visible' }}
+    onClick={onClick}
   >
     {/* Melting face blob with drips - uses CSS class for fill color */}
     <path
@@ -64,12 +112,72 @@ const PsychedelicSmiley: React.FC = () => (
   </svg>
 );
 
-const Header: React.FC = () => {
+interface ColorPickerPopupProps {
+  currentTheme: Theme;
+  onThemeChange: (theme: Theme) => void;
+  onClose: () => void;
+}
+
+const ColorPickerPopup: React.FC<ColorPickerPopupProps> = ({ currentTheme, onThemeChange, onClose }) => {
+  const [hue, setHue] = useState(THEME_TO_HUE[currentTheme]);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  const handleHueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHue = parseInt(e.target.value);
+    setHue(newHue);
+    const theme = findClosestTheme(newHue);
+    onThemeChange(theme);
+  };
+
+  return (
+    <div className="color-picker-popup" ref={popupRef}>
+      <div className="color-picker-label">THEME COLOR</div>
+      <input
+        type="range"
+        min="0"
+        max="360"
+        value={hue}
+        onChange={handleHueChange}
+        className="hue-slider"
+      />
+      <div className="color-preview" style={{ background: `hsl(${hue}, 70%, 60%)` }} />
+    </div>
+  );
+};
+
+interface HeaderProps {
+  theme: Theme;
+  onThemeChange: (theme: Theme) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ theme, onThemeChange }) => {
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
   return (
     <header className="header">
       <div className="header-content">
         <div className="logo">
-          <PsychedelicSmiley />
+          <div className="smiley-wrapper">
+            <PsychedelicSmiley onClick={() => setShowColorPicker(!showColorPicker)} />
+            {showColorPicker && (
+              <ColorPickerPopup
+                currentTheme={theme}
+                onThemeChange={onThemeChange}
+                onClose={() => setShowColorPicker(false)}
+              />
+            )}
+          </div>
           <div className="logo-text">IZ DRUM MACHINE</div>
         </div>
       </div>
@@ -78,3 +186,5 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+export { THEMES };
+export type { Theme };

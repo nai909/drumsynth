@@ -104,43 +104,6 @@
   border-color: var(--accent-primary);
 }
 
-/* Theme Selector */
-.theme-selector {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 0;
-}
-
-.theme-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-}
-
-.theme-btn:hover {
-  transform: scale(1.15);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.theme-btn.active {
-  border-color: white;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
-}
-
-.theme-btn[data-theme="purple"] { background: #a855f7; }
-.theme-btn[data-theme="blue"] { background: #3b82f6; }
-.theme-btn[data-theme="red"] { background: #ef4444; }
-.theme-btn[data-theme="orange"] { background: #f97316; }
-.theme-btn[data-theme="green"] { background: #22c55e; }
-.theme-btn[data-theme="cyan"] { background: #06b6d4; }
-.theme-btn[data-theme="pink"] { background: #ec4899; }
-
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;
@@ -161,10 +124,5 @@
     padding: 14px;
     font-size: 11px;
     min-height: 48px;
-  }
-
-  .theme-btn {
-    width: 24px;
-    height: 24px;
   }
 }
