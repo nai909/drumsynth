@@ -1,45 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import './PsychedelicBackground.css';
 
 const THEMES = ['purple', 'blue', 'red', 'orange', 'green', 'cyan', 'pink'] as const;
 type Theme = typeof THEMES[number];
-
-// Map hue values to theme names
-const HUE_TO_THEME: { hue: number; theme: Theme }[] = [
-  { hue: 280, theme: 'purple' },
-  { hue: 320, theme: 'pink' },
-  { hue: 0, theme: 'red' },
-  { hue: 30, theme: 'orange' },
-  { hue: 140, theme: 'green' },
-  { hue: 190, theme: 'cyan' },
-  { hue: 220, theme: 'blue' },
-];
-
-// Theme to hue mapping for slider position
-const THEME_TO_HUE: Record<Theme, number> = {
-  purple: 280,
-  pink: 320,
-  red: 0,
-  orange: 30,
-  green: 140,
-  cyan: 190,
-  blue: 220,
-};
-
-function findClosestTheme(hue: number): Theme {
-  let closest = HUE_TO_THEME[0];
-  let minDist = Infinity;
-
-  for (const entry of HUE_TO_THEME) {
-    let dist = Math.abs(entry.hue - hue);
-    if (dist > 180) dist = 360 - dist;
-    if (dist < minDist) {
-      minDist = dist;
-      closest = entry;
-    }
-  }
-  return closest.theme;
-}
 
 const FloatingSmiley: React.FC<{ className: string }> = ({ className }) => (
   <svg
@@ -96,11 +59,11 @@ const FloatingSmiley: React.FC<{ className: string }> = ({ className }) => (
   </svg>
 );
 
-interface ColorPickerSmileyProps {
+interface ThemeSmileyProps {
   onClick: () => void;
 }
 
-const ColorPickerSmiley: React.FC<ColorPickerSmileyProps> = ({ onClick }) => (
+const ThemeSmiley: React.FC<ThemeSmileyProps> = ({ onClick }) => (
   <svg
     className="color-picker-smiley"
     viewBox="0 0 64 80"
@@ -156,87 +119,31 @@ const ColorPickerSmiley: React.FC<ColorPickerSmileyProps> = ({ onClick }) => (
   </svg>
 );
 
-interface ColorPickerPopupProps {
-  currentTheme: Theme;
-  onThemeChange: (theme: Theme) => void;
-  onClose: () => void;
-}
-
-const ColorPickerPopup: React.FC<ColorPickerPopupProps> = ({ currentTheme, onThemeChange, onClose }) => {
-  const [hue, setHue] = useState(THEME_TO_HUE[currentTheme]);
-  const popupRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    // Use setTimeout to avoid immediate close on open
-    const timer = setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-    }, 100);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
-
-  const handleHueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    const newHue = parseInt(e.target.value);
-    setHue(newHue);
-    const theme = findClosestTheme(newHue);
-    onThemeChange(theme);
-  };
-
-  const handlePopupClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  return (
-    <div className="color-picker-popup" ref={popupRef} onClick={handlePopupClick} onMouseDown={handlePopupClick}>
-      <div className="color-picker-label">THEME</div>
-      <input
-        type="range"
-        min="0"
-        max="360"
-        value={hue}
-        onChange={handleHueChange}
-        onMouseDown={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-        className="hue-slider"
-      />
-      <div className="color-preview" style={{ background: `hsl(${hue}, 70%, 60%)` }} />
-    </div>
-  );
-};
-
 interface PsychedelicBackgroundProps {
   theme?: Theme;
   onThemeChange?: (theme: Theme) => void;
 }
 
 const PsychedelicBackground: React.FC<PsychedelicBackgroundProps> = ({ theme, onThemeChange }) => {
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const handleThemeClick = () => {
+    if (!theme || !onThemeChange) return;
+
+    // Find current theme index and cycle to next
+    const currentIndex = THEMES.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % THEMES.length;
+    onThemeChange(THEMES[nextIndex]);
+  };
 
   return (
     <div className="psychedelic-bg">
       {/* Floating title */}
       <div className="floating-title">IZ DRUM MACHINE</div>
 
-      {/* Color picker smiley - only show if theme props are provided */}
+      {/* Theme smiley - click to cycle through themes */}
       {theme && onThemeChange && (
         <div className="color-picker-wrapper">
-          <ColorPickerSmiley onClick={() => setShowColorPicker(!showColorPicker)} />
-          {!showColorPicker && <div className="color-picker-hint">THEME</div>}
-          {showColorPicker && (
-            <ColorPickerPopup
-              currentTheme={theme}
-              onThemeChange={onThemeChange}
-              onClose={() => setShowColorPicker(false)}
-            />
-          )}
+          <ThemeSmiley onClick={handleThemeClick} />
+          <div className="color-picker-hint">THEME</div>
         </div>
       )}
 
