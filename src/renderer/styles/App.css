@@ -171,7 +171,15 @@
   .center-section {
     gap: 5px;
     flex: 1;
-    min-height: 400px;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .sequencer-container {
+    flex: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    overflow: visible;
   }
 
   .params-toggle {

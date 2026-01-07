@@ -15,7 +15,8 @@
   .track-params {
     padding: 8px;
     min-width: 100%;
-    max-height: 180px;
+    max-height: 150px;
+    flex-shrink: 0;
   }
 }
 
