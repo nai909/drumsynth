@@ -172,19 +172,30 @@ const ColorPickerPopup: React.FC<ColorPickerPopupProps> = ({ currentTheme, onThe
         onClose();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // Use setTimeout to avoid immediate close on open
+    const timer = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+    }, 100);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [onClose]);
 
   const handleHueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     const newHue = parseInt(e.target.value);
     setHue(newHue);
     const theme = findClosestTheme(newHue);
     onThemeChange(theme);
   };
 
+  const handlePopupClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="color-picker-popup" ref={popupRef}>
+    <div className="color-picker-popup" ref={popupRef} onClick={handlePopupClick} onMouseDown={handlePopupClick}>
       <div className="color-picker-label">THEME</div>
       <input
         type="range"
@@ -192,6 +203,8 @@ const ColorPickerPopup: React.FC<ColorPickerPopupProps> = ({ currentTheme, onThe
         max="360"
         value={hue}
         onChange={handleHueChange}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
         className="hue-slider"
       />
       <div className="color-preview" style={{ background: `hsl(${hue}, 70%, 60%)` }} />
@@ -216,6 +229,7 @@ const PsychedelicBackground: React.FC<PsychedelicBackgroundProps> = ({ theme, on
       {theme && onThemeChange && (
         <div className="color-picker-wrapper">
           <ColorPickerSmiley onClick={() => setShowColorPicker(!showColorPicker)} />
+          {!showColorPicker && <div className="color-picker-hint">THEME</div>}
           {showColorPicker && (
             <ColorPickerPopup
               currentTheme={theme}

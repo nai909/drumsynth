@@ -45,30 +45,57 @@
   left: 10px;
   z-index: 100;
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .color-picker-smiley {
-  width: 40px;
-  height: 50px;
+  width: 44px;
+  height: 55px;
   cursor: pointer;
-  filter: drop-shadow(0 0 10px var(--accent-glow));
-  -webkit-filter: drop-shadow(0 0 10px var(--accent-glow));
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+  -webkit-filter: drop-shadow(0 0 12px var(--accent-glow));
   transition: transform 0.2s ease, filter 0.2s ease;
-  animation: smileyMelt 4s ease-in-out infinite;
+  animation: smileyPulse 2s ease-in-out infinite;
 }
 
 .color-picker-smiley:hover {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 15px var(--accent-glow));
-  -webkit-filter: drop-shadow(0 0 15px var(--accent-glow));
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 20px var(--accent-glow));
+  -webkit-filter: drop-shadow(0 0 20px var(--accent-glow));
 }
 
-@keyframes smileyMelt {
+.color-picker-hint {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-secondary);
+  text-shadow: 0 0 10px var(--accent-glow);
+  opacity: 0.8;
+  animation: hintPulse 2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes smileyPulse {
   0%, 100% {
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 12px var(--accent-glow));
+    -webkit-filter: drop-shadow(0 0 12px var(--accent-glow));
   }
   50% {
-    transform: translateY(2px) scaleY(1.03);
+    transform: translateY(-2px) scale(1.05);
+    filter: drop-shadow(0 0 20px var(--accent-glow));
+    -webkit-filter: drop-shadow(0 0 20px var(--accent-glow));
+  }
+}
+
+@keyframes hintPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
@@ -410,13 +437,18 @@
   }
 
   .color-picker-wrapper {
-    top: 5px;
-    left: 5px;
+    top: 8px;
+    left: 8px;
+    gap: 6px;
   }
 
   .color-picker-smiley {
-    width: 32px;
-    height: 40px;
+    width: 36px;
+    height: 45px;
+  }
+
+  .color-picker-hint {
+    font-size: 8px;
   }
 
   .color-picker-popup {
@@ -425,7 +457,7 @@
   }
 
   .hue-slider {
-    height: 24px;
+    height: 28px;
   }
 
   .smiley-1, .smiley-2, .smiley-3, .smiley-4,

@@ -82,16 +82,22 @@
   .drum-pads {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    min-height: 400px;
+    min-height: 500px;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .drum-pad {
+    min-height: 100px;
   }
 
   .pad-icon-svg {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
   }
 
   .drum-pad-name {
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 
@@ -238,6 +244,10 @@
 }
 
 @media (max-width: 768px) {
+  .step-sequencer {
+    min-height: 450px;
+  }
+
   .track-label {
     width: 50px;
     min-width: 50px;
@@ -250,6 +260,6 @@
   }
 
   .step-btn {
-    min-height: 32px;
+    min-height: 38px;
   }
 }
