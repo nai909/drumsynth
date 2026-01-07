@@ -2,30 +2,16 @@ import React from 'react';
 import './Header.css';
 
 const PsychedelicSmiley: React.FC = () => (
-  <svg className="psychedelic-smiley" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="meltGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="var(--accent-primary)">
-          <animate attributeName="stop-color" values="var(--accent-primary);var(--accent-secondary);var(--trigger-primary);var(--accent-primary)" dur="4s" repeatCount="indefinite" />
-        </stop>
-        <stop offset="50%" stopColor="var(--accent-secondary)">
-          <animate attributeName="stop-color" values="var(--accent-secondary);var(--trigger-primary);var(--accent-primary);var(--accent-secondary)" dur="4s" repeatCount="indefinite" />
-        </stop>
-        <stop offset="100%" stopColor="var(--trigger-primary)">
-          <animate attributeName="stop-color" values="var(--trigger-primary);var(--accent-primary);var(--accent-secondary);var(--trigger-primary)" dur="4s" repeatCount="indefinite" />
-        </stop>
-      </linearGradient>
-      <filter id="smileyGlow">
-        <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-        <feMerge>
-          <feMergeNode in="coloredBlur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-
-    {/* Melting face blob with drips */}
+  <svg
+    className="psychedelic-smiley"
+    viewBox="0 0 64 80"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ overflow: 'visible' }}
+  >
+    {/* Melting face blob with drips - uses CSS class for fill color */}
     <path
+      className="smiley-face"
       d="M32 4
          C14 4 4 16 4 32
          C4 44 10 52 14 56
@@ -39,8 +25,6 @@ const PsychedelicSmiley: React.FC = () => (
          L48 70 C48 74 46 78 46 78 C46 82 50 82 50 78 L50 58
          C54 54 60 46 60 32
          C60 16 50 4 32 4Z"
-      fill="url(#meltGradient)"
-      filter="url(#smileyGlow)"
     >
       <animate
         attributeName="d"
@@ -53,19 +37,19 @@ const PsychedelicSmiley: React.FC = () => (
     </path>
 
     {/* Left eye - dripping */}
-    <ellipse cx="20" cy="28" rx="5" ry="8" fill="#1a1a1a">
+    <ellipse className="smiley-eye" cx="20" cy="28" rx="5" ry="8">
       <animate attributeName="ry" values="8;10;8" dur="2s" repeatCount="indefinite"/>
     </ellipse>
 
     {/* Right eye - dripping */}
-    <ellipse cx="44" cy="28" rx="5" ry="8" fill="#1a1a1a">
+    <ellipse className="smiley-eye" cx="44" cy="28" rx="5" ry="8">
       <animate attributeName="ry" values="8;10;8" dur="2s" repeatCount="indefinite" begin="0.3s"/>
     </ellipse>
 
     {/* Wavy smile */}
     <path
+      className="smiley-mouth"
       d="M16 44 Q24 54, 32 52 Q40 50, 48 44"
-      stroke="#1a1a1a"
       strokeWidth="4"
       fill="none"
       strokeLinecap="round"

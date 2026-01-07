@@ -27,7 +27,35 @@
   height: 45px;
   flex-shrink: 0;
   filter: drop-shadow(0 0 10px var(--accent-glow));
+  -webkit-filter: drop-shadow(0 0 10px var(--accent-glow));
   animation: smileyMelt 4s ease-in-out infinite;
+  overflow: visible;
+  display: block;
+}
+
+.smiley-face {
+  fill: var(--accent-primary);
+  animation: smileyColorCycle 4s ease-in-out infinite;
+}
+
+.smiley-eye {
+  fill: #1a1a1a;
+}
+
+.smiley-mouth {
+  stroke: #1a1a1a;
+}
+
+@keyframes smileyColorCycle {
+  0%, 100% {
+    fill: var(--accent-primary);
+  }
+  33% {
+    fill: var(--accent-secondary);
+  }
+  66% {
+    fill: var(--trigger-primary);
+  }
 }
 
 @keyframes smileyMelt {

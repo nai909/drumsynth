@@ -185,90 +185,165 @@ export class DrumSynth {
 
   triggerHiHat(time: number, velocity: number = 1, open: boolean = false, tune: number = 0, decay: number = 0.1, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {
     try {
-      // Trap-style hi-hat: bright, crispy, tight
-      const actualDecay = open ? Math.max(0.15, decay * 3) : Math.max(0.02, decay * 0.3);
+      if (open) {
+        // Classic 909 open hi-hat: metallic shimmer with long sustain
+        const openDecay = Math.max(0.3, decay * 2.5);
+        const tuneMultiplier = 1 + (tune * 0.2);
 
-      // Main noise component - bright white noise
-      const noise = new Tone.NoiseSynth({
-        noise: { type: 'white' },
-        envelope: {
+        const disposables: any[] = [];
+
+        // 909 uses 6 square wave oscillators at specific frequencies for metallic tone
+        const frequencies = [
+          263.6 * tuneMultiplier,
+          400 * tuneMultiplier,
+          523.3 * tuneMultiplier,
+          587.3 * tuneMultiplier,
+          845 * tuneMultiplier,
+          1127 * tuneMultiplier,
+        ];
+
+        const oscGain = new Tone.Gain(0.15);
+        const noiseGain = new Tone.Gain(0.35);
+        const merger = new Tone.Gain(0.5);
+
+        // Metallic oscillator envelope - longer for open hat
+        const oscEnv = new Tone.AmplitudeEnvelope({
+          attack: 0.001,
+          decay: openDecay,
+          sustain: 0.05,
+          release: openDecay * 0.5,
+        });
+
+        // Create the 6 metallic oscillators
+        frequencies.forEach((freq) => {
+          const osc = new Tone.Oscillator({
+            frequency: freq,
+            type: 'square',
+          });
+          osc.connect(oscEnv);
+          osc.start(time);
+          disposables.push(osc);
+        });
+
+        oscEnv.connect(oscGain);
+        oscGain.connect(merger);
+        disposables.push(oscEnv, oscGain);
+
+        // Noise layer for body
+        const noise = new Tone.NoiseSynth({
+          noise: { type: 'white' },
+          envelope: {
+            attack: 0.001,
+            decay: openDecay * 0.8,
+            sustain: 0.02,
+            release: openDecay * 0.3,
+          },
+        });
+        noise.connect(noiseGain);
+        noiseGain.connect(merger);
+        disposables.push(noise, noiseGain);
+
+        // 909 characteristic highpass around 8-10kHz
+        const highpass = new Tone.Filter({
+          frequency: Math.max(7000, Math.min(12000, filterCutoff * 4000 + 7000)),
+          type: 'highpass',
+          Q: Math.max(0.5, Math.min(2, 0.8 + filterResonance)),
+        });
+
+        // Bandpass for that 909 character
+        const bandpass = new Tone.Filter({
+          frequency: Math.max(8000, Math.min(14000, 10000 + (tone * 3000))),
+          type: 'bandpass',
+          Q: 0.6,
+        });
+
+        const distortion = new Tone.Distortion(Math.max(0.02, Math.min(0.3, 0.05 + drive * 0.25)));
+        const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
+
+        merger.chain(highpass, bandpass, distortion, panner, this.masterGain);
+        disposables.push(merger, highpass, bandpass, distortion, panner);
+
+        oscEnv.triggerAttackRelease(openDecay, time, Math.max(0.3, Math.min(1, velocity * 0.5)));
+        noise.triggerAttackRelease(openDecay, time, Math.max(0.3, Math.min(1, velocity)));
+
+        setTimeout(() => {
+          disposables.forEach(d => {
+            if (d.stop) d.stop();
+            d.dispose();
+          });
+        }, Math.max(800, openDecay * 1000 + 300));
+
+      } else {
+        // Closed hi-hat: tight and crispy
+        const closedDecay = Math.max(0.02, decay * 0.25);
+        const tuneMultiplier = 1 + (tune * 0.3);
+
+        const disposables: any[] = [];
+
+        // Noise component
+        const noise = new Tone.NoiseSynth({
+          noise: { type: 'white' },
+          envelope: {
+            attack: 0.0005,
+            decay: closedDecay,
+            sustain: 0,
+            release: 0.005,
+          },
+        });
+
+        // High-pitched oscillators for metallic shimmer
+        const oscFreqs = [6000 * tuneMultiplier, 7500 * tuneMultiplier, 9000 * tuneMultiplier];
+        const oscEnv = new Tone.AmplitudeEnvelope({
           attack: 0.0005,
-          decay: actualDecay,
+          decay: closedDecay * 0.8,
           sustain: 0,
-          release: 0.008,
-        },
-      });
+          release: 0.003,
+        });
 
-      // High-pitched oscillators for metallic shimmer
-      const osc1 = new Tone.Oscillator({
-        frequency: 6000 * (1 + tune * 0.3),
-        type: 'square',
-      });
+        const oscGain = new Tone.Gain(0.25);
+        oscFreqs.forEach((freq) => {
+          const osc = new Tone.Oscillator({ frequency: freq, type: 'square' });
+          osc.connect(oscEnv);
+          osc.start(time);
+          disposables.push(osc);
+        });
 
-      const osc2 = new Tone.Oscillator({
-        frequency: 7500 * (1 + tune * 0.3),
-        type: 'square',
-      });
+        oscEnv.connect(oscGain);
+        disposables.push(oscEnv, oscGain);
 
-      const osc3 = new Tone.Oscillator({
-        frequency: 9000 * (1 + tune * 0.3),
-        type: 'square',
-      });
+        const merger = new Tone.Gain(0.45);
+        noise.connect(merger);
+        oscGain.connect(merger);
+        disposables.push(noise, merger);
 
-      const env = new Tone.AmplitudeEnvelope({
-        attack: 0.0005,
-        decay: actualDecay * 0.8,
-        sustain: 0,
-        release: 0.005,
-      });
+        const highpass = new Tone.Filter({
+          frequency: Math.max(8000, Math.min(16000, filterCutoff * 6000 + 8000)),
+          type: 'highpass',
+          Q: Math.max(0.5, Math.min(3, 1 + filterResonance)),
+        });
 
-      // Highpass filter - very bright for trap sound
-      const highpass = new Tone.Filter({
-        frequency: Math.max(8000, Math.min(16000, filterCutoff * 6000 + 8000)),
-        type: 'highpass',
-        Q: Math.max(0.5, Math.min(3, 1 + filterResonance)),
-      });
+        const bandpass = new Tone.Filter({
+          frequency: Math.max(10000, Math.min(18000, 12000 + (tone * 4000))),
+          type: 'bandpass',
+          Q: 0.8,
+        });
 
-      // Slight bandpass for character
-      const bandpass = new Tone.Filter({
-        frequency: Math.max(10000, Math.min(18000, 12000 + (tone * 4000))),
-        type: 'bandpass',
-        Q: 0.8,
-      });
+        const distortion = new Tone.Distortion(Math.max(0.05, Math.min(0.4, 0.1 + drive * 0.3)));
+        const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
 
-      // Light saturation for that crispy trap sound
-      const distortion = new Tone.Distortion(Math.max(0.05, Math.min(0.4, 0.1 + drive * 0.3)));
-      const panner = new Tone.Panner(Math.max(-1, Math.min(1, pan)));
-      const gain = new Tone.Gain(open ? 0.35 : 0.4);
+        merger.chain(highpass, bandpass, distortion, panner, this.masterGain);
+        disposables.push(highpass, bandpass, distortion, panner);
 
-      osc1.connect(env);
-      osc2.connect(env);
-      osc3.connect(env);
-      noise.connect(gain);
-      env.connect(gain);
-      gain.chain(highpass, bandpass, distortion, panner, this.masterGain);
+        oscEnv.triggerAttackRelease(closedDecay, time, Math.max(0.2, Math.min(1, velocity * 0.4)));
+        noise.triggerAttackRelease(closedDecay, time, Math.max(0.3, Math.min(1, velocity)));
 
-      osc1.start(time);
-      osc2.start(time);
-      osc3.start(time);
-      env.triggerAttackRelease(actualDecay, time, Math.max(0.2, Math.min(1, velocity * 0.4)));
-      noise.triggerAttackRelease(actualDecay, time, Math.max(0.3, Math.min(1, velocity)));
-
-      setTimeout(() => {
-        osc1.stop();
-        osc2.stop();
-        osc3.stop();
-        osc1.dispose();
-        osc2.dispose();
-        osc3.dispose();
-        env.dispose();
-        noise.dispose();
-        highpass.dispose();
-        bandpass.dispose();
-        distortion.dispose();
-        panner.dispose();
-        gain.dispose();
-      }, Math.max(300, actualDecay * 1000 + 100));
+        setTimeout(() => {
+          disposables.forEach(d => {
+            if (d.stop) d.stop();
+            d.dispose();
+          });
+        }, 300);
+      }
     } catch (error) {
       console.error('HiHat error:', error);
     }
