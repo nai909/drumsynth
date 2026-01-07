@@ -1,7 +1,7 @@
 {
-  "name": "tr1000-drum-synth",
+  "name": "iz-drum-machine",
   "version": "1.0.0",
-  "description": "TR-1000 inspired drum synthesizer",
+  "description": "IZ Drum Machine - Web-based drum synthesizer",
   "main": "dist/main.js",
   "scripts": {
     "start": "electron .",
@@ -40,8 +40,8 @@
     "tone": "^14.7.77"
   },
   "build": {
-    "appId": "com.tr1000.drumsynth",
-    "productName": "TR-1000 Drum Synth",
+    "appId": "com.iz.drummachine",
+    "productName": "IZ Drum Machine",
     "files": [
       "dist/**/*",
       "package.json"
