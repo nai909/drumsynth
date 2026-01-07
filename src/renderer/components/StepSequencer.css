@@ -246,21 +246,22 @@
 
 @media (max-width: 768px) {
   .step-sequencer {
-    min-height: 450px;
+    min-height: 550px;
+    flex: 1;
   }
 
   .track-label {
-    width: 50px;
-    min-width: 50px;
+    width: 45px;
+    min-width: 45px;
     font-size: 8px;
     padding: 6px 4px;
   }
 
   .step-row {
-    gap: 4px;
+    gap: 3px;
   }
 
   .step-btn {
-    min-height: 38px;
+    min-height: 44px;
   }
 }

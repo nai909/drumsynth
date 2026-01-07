@@ -47,7 +47,6 @@ const TrackParams: React.FC<TrackParamsProps> = ({ track, onParamChange }) => {
             </svg>
             RESET
           </button>
-          <div className="track-params-type">{track.type.toUpperCase()}</div>
         </div>
       </div>
 
