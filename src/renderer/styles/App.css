@@ -11,7 +11,7 @@
   flex: 1;
   display: flex;
   overflow: hidden;
-  padding: 85px 10px 10px 10px;
+  padding: 115px 10px 10px 10px;
   gap: 10px;
   min-height: 0;
   position: relative;
@@ -113,14 +113,14 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  width: 60px;
-  height: 75px;
+  width: 85px;
+  height: 105px;
   padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  filter: drop-shadow(0 0 10px var(--accent-glow));
+  filter: drop-shadow(0 0 12px var(--accent-glow));
 }
 
 .theme-smiley-btn:hover {
@@ -153,15 +153,15 @@
 @media (max-width: 768px) {
   .theme-smiley-btn {
     top: 3px;
-    width: 50px;
-    height: 62px;
+    width: 65px;
+    height: 80px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;
-    padding: 70px 5px 5px 5px;
+    padding: 90px 5px 5px 5px;
     gap: 5px;
     overflow-y: auto;
     overflow-x: hidden;

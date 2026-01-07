@@ -8,14 +8,14 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   flex-shrink: 1;
-  max-height: 280px;
+  max-height: 220px;
 }
 
 @media (max-width: 768px) {
   .track-params {
-    padding: 10px;
+    padding: 8px;
     min-width: 100%;
-    max-height: 250px;
+    max-height: 180px;
   }
 }
 
