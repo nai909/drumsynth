@@ -62,6 +62,12 @@
   border-right: 1px solid var(--accent-border);
 }
 
+.mode-toggle:nth-child(2) {
+  border-radius: 0;
+  border-left: 1px solid var(--accent-border);
+  border-right: 1px solid var(--accent-border);
+}
+
 .mode-toggle:last-child {
   border-radius: 0 8px 8px 0;
   border-left: 1px solid var(--accent-border);
@@ -79,32 +85,6 @@
   box-shadow: 0 0 15px var(--accent-border);
 }
 
-.params-toggle {
-  width: 100%;
-  padding: 12px;
-  background: var(--accent-bg);
-  border: 2px solid var(--accent-border);
-  border-radius: 8px;
-  color: var(--accent-primary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-  touch-action: manipulation;
-  flex-shrink: 0;
-}
-
-.params-toggle:hover {
-  background: var(--accent-bg-hover);
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 15px var(--accent-border);
-}
-
-.params-toggle.active {
-  background: var(--accent-bg-hover);
-  border-color: var(--accent-primary);
-}
 
 /* Clickable theme smiley */
 .theme-smiley-btn {
@@ -180,16 +160,5 @@
     flex-shrink: 1;
     min-height: 0;
     overflow: visible;
-  }
-
-  .params-toggle {
-    padding: 14px;
-    font-size: 11px;
-    min-height: 48px;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-    -webkit-user-select: none;
-    position: relative;
-    z-index: 10;
   }
 }

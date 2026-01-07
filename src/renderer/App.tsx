@@ -223,8 +223,7 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState(0);
-  const [showParams, setShowParams] = useState(false);
-  const [mode, setMode] = useState<'sequencer' | 'pad'>('pad');
+  const [mode, setMode] = useState<'sequencer' | 'pad' | 'params'>('pad');
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('drumsynth-theme');
     return (saved as Theme) || 'purple';
@@ -381,36 +380,35 @@ const App: React.FC = () => {
                 PAD
               </button>
               <button
+                className={`mode-toggle ${mode === 'params' ? 'active' : ''}`}
+                onClick={() => setMode('params')}
+              >
+                PARAMS
+              </button>
+              <button
                 className={`mode-toggle ${mode === 'sequencer' ? 'active' : ''}`}
                 onClick={() => setMode('sequencer')}
               >
                 SEQUENCER
               </button>
             </div>
-            <StepSequencer
-              tracks={pattern.tracks}
-              currentStep={currentStep}
-              selectedTrack={selectedTrack}
-              onStepToggle={handleStepToggle}
-              onSelectTrack={setSelectedTrack}
-              mode={mode}
-              onPadTrigger={handlePadTrigger}
-            />
-            {mode === 'pad' && (
-              <button
-                className={`params-toggle ${showParams ? 'active' : ''}`}
-                onClick={() => setShowParams(!showParams)}
-              >
-                {showParams ? 'HIDE PARAMETERS' : 'SHOW PARAMETERS'}
-              </button>
+            {mode === 'params' ? (
+              <TrackParams
+                track={pattern.tracks[selectedTrack]}
+                onParamChange={handleParamChange}
+              />
+            ) : (
+              <StepSequencer
+                tracks={pattern.tracks}
+                currentStep={currentStep}
+                selectedTrack={selectedTrack}
+                onStepToggle={handleStepToggle}
+                onSelectTrack={setSelectedTrack}
+                mode={mode === 'pad' ? 'pad' : 'sequencer'}
+                onPadTrigger={handlePadTrigger}
+              />
             )}
           </div>
-          {mode === 'pad' && showParams && (
-            <TrackParams
-              track={pattern.tracks[selectedTrack]}
-              onParamChange={handleParamChange}
-            />
-          )}
         </div>
       </div>
       <Transport
