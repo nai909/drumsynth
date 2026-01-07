@@ -191,7 +191,7 @@ const App: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState(0);
   const [showParams, setShowParams] = useState(false);
-  const [mode, setMode] = useState<'sequencer' | 'pad'>('sequencer');
+  const [mode, setMode] = useState<'sequencer' | 'pad'>('pad');
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('drumsynth-theme');
     return (saved as Theme) || 'purple';
@@ -320,16 +320,16 @@ const App: React.FC = () => {
           <div className="sequencer-container">
             <div className="mode-toggle-container">
               <button
-                className={`mode-toggle ${mode === 'sequencer' ? 'active' : ''}`}
-                onClick={() => setMode('sequencer')}
-              >
-                SEQUENCER
-              </button>
-              <button
                 className={`mode-toggle ${mode === 'pad' ? 'active' : ''}`}
                 onClick={() => setMode('pad')}
               >
                 PAD
+              </button>
+              <button
+                className={`mode-toggle ${mode === 'sequencer' ? 'active' : ''}`}
+                onClick={() => setMode('sequencer')}
+              >
+                SEQUENCER
               </button>
             </div>
             <div className="theme-selector">
