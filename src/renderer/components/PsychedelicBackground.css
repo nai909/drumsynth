@@ -1,0 +1,353 @@
+.psychedelic-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Blob animations */
+.blob-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  filter: url(#goo);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  animation: blobMorph 20s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+  top: -100px;
+  left: -50px;
+  animation: blobFloat1 25s ease-in-out infinite, colorCycle1 15s ease-in-out infinite;
+}
+
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent-secondary) 0%, transparent 70%);
+  top: 50%;
+  right: -100px;
+  animation: blobFloat2 30s ease-in-out infinite, colorCycle2 18s ease-in-out infinite;
+}
+
+.blob-3 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, var(--trigger-primary) 0%, transparent 70%);
+  bottom: -50px;
+  left: 30%;
+  animation: blobFloat3 22s ease-in-out infinite;
+}
+
+.blob-4 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+  top: 30%;
+  left: 20%;
+  animation: blobFloat4 28s ease-in-out infinite, blobPulse 8s ease-in-out infinite;
+}
+
+.blob-5 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+  bottom: 20%;
+  right: 20%;
+  animation: blobFloat5 35s ease-in-out infinite, colorCycle1 20s ease-in-out infinite reverse;
+}
+
+.blob-6 {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, var(--trigger-secondary) 0%, transparent 70%);
+  top: 60%;
+  left: -50px;
+  animation: blobFloat6 18s ease-in-out infinite;
+}
+
+/* Drip effects */
+.drip-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.drip {
+  position: absolute;
+  width: 20px;
+  background: linear-gradient(180deg, var(--accent-primary) 0%, transparent 100%);
+  border-radius: 0 0 50% 50%;
+  opacity: 0.4;
+  animation: dripFall 8s ease-in infinite;
+}
+
+.drip-1 {
+  left: 10%;
+  height: 100px;
+  animation-delay: 0s;
+  animation-duration: 12s;
+}
+
+.drip-2 {
+  left: 25%;
+  height: 150px;
+  animation-delay: 2s;
+  animation-duration: 10s;
+}
+
+.drip-3 {
+  left: 50%;
+  height: 80px;
+  animation-delay: 4s;
+  animation-duration: 14s;
+}
+
+.drip-4 {
+  left: 75%;
+  height: 120px;
+  animation-delay: 1s;
+  animation-duration: 11s;
+}
+
+.drip-5 {
+  left: 90%;
+  height: 90px;
+  animation-delay: 3s;
+  animation-duration: 13s;
+}
+
+/* Wave effects */
+.wave-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 200px;
+  bottom: -100px;
+  left: -50%;
+  background: radial-gradient(ellipse at center, var(--accent-primary) 0%, transparent 70%);
+  border-radius: 45%;
+  opacity: 0.2;
+  animation: waveRoll 15s linear infinite;
+}
+
+.wave-1 {
+  animation-duration: 20s;
+  opacity: 0.15;
+}
+
+.wave-2 {
+  animation-duration: 25s;
+  animation-delay: -5s;
+  opacity: 0.1;
+  background: radial-gradient(ellipse at center, var(--trigger-primary) 0%, transparent 70%);
+}
+
+.wave-3 {
+  animation-duration: 18s;
+  animation-delay: -10s;
+  opacity: 0.12;
+}
+
+/* Keyframe animations */
+@keyframes blobFloat1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    transform: translate(100px, 50px) scale(1.1) rotate(90deg);
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    transform: translate(50px, 100px) scale(0.9) rotate(180deg);
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+  }
+  75% {
+    transform: translate(-30px, 50px) scale(1.05) rotate(270deg);
+    border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%;
+  }
+}
+
+@keyframes blobFloat2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    border-radius: 40% 60% 60% 40% / 40% 50% 60% 50%;
+  }
+  33% {
+    transform: translate(-80px, 60px) scale(1.15);
+    border-radius: 60% 40% 40% 60% / 60% 40% 50% 40%;
+  }
+  66% {
+    transform: translate(-40px, -40px) scale(0.85);
+    border-radius: 50% 50% 60% 40% / 40% 60% 40% 60%;
+  }
+}
+
+@keyframes blobFloat3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(80px, -60px) scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes blobFloat4 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(60px, -40px);
+  }
+  50% {
+    transform: translate(100px, 20px);
+  }
+  75% {
+    transform: translate(40px, 60px);
+  }
+}
+
+@keyframes blobFloat5 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    border-radius: 70% 30% 50% 50% / 30% 70% 30% 70%;
+  }
+  50% {
+    transform: translate(-100px, -80px) scale(1.1);
+    border-radius: 30% 70% 70% 30% / 70% 30% 70% 30%;
+  }
+}
+
+@keyframes blobFloat6 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-100px) scale(1.3);
+  }
+}
+
+@keyframes blobPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes blobMorph {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+  }
+  75% {
+    border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%;
+  }
+}
+
+@keyframes colorCycle1 {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(30deg);
+  }
+}
+
+@keyframes colorCycle2 {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    filter: hue-rotate(-20deg);
+  }
+  66% {
+    filter: hue-rotate(20deg);
+  }
+}
+
+@keyframes dripFall {
+  0% {
+    top: -150px;
+    opacity: 0;
+    transform: scaleY(0.5);
+  }
+  10% {
+    opacity: 0.4;
+    transform: scaleY(1);
+  }
+  90% {
+    opacity: 0.4;
+    transform: scaleY(1.5);
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+    transform: scaleY(2);
+  }
+}
+
+@keyframes waveRoll {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .blob, .drip, .wave {
+    animation: none;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .psychedelic-bg {
+    opacity: 0.4;
+  }
+
+  .blob {
+    transform: scale(0.6);
+  }
+
+  .drip {
+    display: none;
+  }
+}

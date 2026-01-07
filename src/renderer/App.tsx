@@ -7,6 +7,7 @@ import Header from './components/Header';
 import StepSequencer from './components/StepSequencer';
 import Transport from './components/Transport';
 import TrackParams from './components/TrackParams';
+import PsychedelicBackground from './components/PsychedelicBackground';
 import './styles/App.css';
 
 const createInitialPattern = (): Pattern => {
@@ -314,6 +315,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
+      <PsychedelicBackground />
       <Header />
       <div className="main-content">
         <div className="center-section">
