@@ -17,7 +17,26 @@
 
 .logo {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.psychedelic-smiley {
+  width: 36px;
+  height: 45px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px var(--accent-glow));
+  animation: smileyMelt 4s ease-in-out infinite;
+}
+
+@keyframes smileyMelt {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(2px) scaleY(1.03);
+  }
 }
 
 .logo-text {
@@ -55,8 +74,17 @@
     padding: 8px 10px;
   }
 
+  .logo {
+    gap: 8px;
+  }
+
+  .psychedelic-smiley {
+    width: 28px;
+    height: 35px;
+  }
+
   .logo-text {
-    font-size: 16px;
+    font-size: 14px;
     letter-spacing: 1px;
   }
 
