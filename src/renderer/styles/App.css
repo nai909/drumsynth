@@ -106,60 +106,55 @@
   border-color: var(--accent-primary);
 }
 
-/* Compact theme dots */
-.theme-dots {
+/* Clickable theme smiley */
+.theme-smiley-btn {
   position: fixed;
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  gap: 6px;
   z-index: 100;
-  padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-}
-
-.theme-dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 40px;
+  height: 50px;
   padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 0 8px var(--accent-glow));
 }
 
-.theme-dot:hover {
-  transform: scale(1.2);
-  border-color: rgba(255, 255, 255, 0.5);
+.theme-smiley-btn:hover {
+  transform: translateX(-50%) scale(1.15);
+  filter: drop-shadow(0 0 15px var(--accent-glow));
 }
 
-.theme-dot.active {
-  border-color: white;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
+.theme-smiley-btn:active {
+  transform: translateX(-50%) scale(0.95);
 }
 
-.theme-dot[data-theme="purple"] { background: #a855f7; }
-.theme-dot[data-theme="blue"] { background: #3b82f6; }
-.theme-dot[data-theme="red"] { background: #ef4444; }
-.theme-dot[data-theme="orange"] { background: #f97316; }
-.theme-dot[data-theme="green"] { background: #22c55e; }
-.theme-dot[data-theme="cyan"] { background: #06b6d4; }
-.theme-dot[data-theme="pink"] { background: #ec4899; }
+.theme-smiley-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+.theme-smiley-face {
+  fill: var(--accent-primary);
+  transition: fill 0.3s ease;
+}
+
+.theme-smiley-eye {
+  fill: rgba(0, 0, 0, 0.7);
+}
+
+.theme-smiley-mouth {
+  stroke: rgba(0, 0, 0, 0.7);
+}
 
 @media (max-width: 768px) {
-  .theme-dots {
+  .theme-smiley-btn {
     top: 5px;
-    gap: 5px;
-    padding: 5px 8px;
-  }
-
-  .theme-dot {
-    width: 16px;
-    height: 16px;
+    width: 32px;
+    height: 40px;
   }
 }
 
