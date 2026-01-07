@@ -28,6 +28,45 @@
   gap: 8px;
 }
 
+.track-params-title-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-params-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-secondary);
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+  background: var(--accent-bg);
+  border: 2px solid var(--accent-border);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.track-params-icon-btn:hover {
+  background: var(--accent-bg-hover);
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.track-params-icon-btn:active {
+  background: var(--trigger-bg);
+  border-color: var(--trigger-primary);
+  color: var(--trigger-secondary);
+  transform: scale(0.95);
+  box-shadow: 0 0 15px var(--trigger-glow);
+}
+
+.params-icon-svg {
+  width: 32px;
+  height: 32px;
+}
+
 .track-params-title {
   font-size: 14px;
   font-weight: 700;

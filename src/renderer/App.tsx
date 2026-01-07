@@ -383,7 +383,7 @@ const App: React.FC = () => {
                 className={`mode-toggle ${mode === 'params' ? 'active' : ''}`}
                 onClick={() => setMode('params')}
               >
-                PARAMS
+                PARAMETERS
               </button>
               <button
                 className={`mode-toggle ${mode === 'sequencer' ? 'active' : ''}`}
@@ -395,7 +395,9 @@ const App: React.FC = () => {
             {mode === 'params' ? (
               <TrackParams
                 track={pattern.tracks[selectedTrack]}
+                trackIndex={selectedTrack}
                 onParamChange={handleParamChange}
+                onTrigger={handlePadTrigger}
               />
             ) : (
               <StepSequencer

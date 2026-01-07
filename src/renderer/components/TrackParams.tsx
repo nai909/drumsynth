@@ -1,14 +1,17 @@
 import React from 'react';
 import { DrumTrack } from '../types';
 import { INSTRUMENT_DEFAULTS, generateRandomParams } from '../constants/instrumentDefaults';
+import { DrumIcons } from './DrumIcons';
 import './TrackParams.css';
 
 interface TrackParamsProps {
   track: DrumTrack;
+  trackIndex: number;
   onParamChange: (param: keyof DrumTrack, value: number) => void;
+  onTrigger?: (trackIndex: number) => void;
 }
 
-const TrackParams: React.FC<TrackParamsProps> = ({ track, onParamChange }) => {
+const TrackParams: React.FC<TrackParamsProps> = ({ track, trackIndex, onParamChange, onTrigger }) => {
   const handleChange = (param: keyof DrumTrack, value: number) => {
     onParamChange(param, value);
   };
@@ -32,7 +35,18 @@ const TrackParams: React.FC<TrackParamsProps> = ({ track, onParamChange }) => {
   return (
     <div className="track-params">
       <div className="track-params-header">
-        <h3 className="track-params-title">{track.name}</h3>
+        <div className="track-params-title-section">
+          {DrumIcons[track.soundEngine] && (
+            <button
+              className="track-params-icon-btn"
+              onClick={() => onTrigger?.(trackIndex)}
+              title={`Play ${track.name}`}
+            >
+              {React.createElement(DrumIcons[track.soundEngine], { className: 'params-icon-svg' })}
+            </button>
+          )}
+          <h3 className="track-params-title">{track.name}</h3>
+        </div>
         <div className="track-params-header-right">
           <button className="param-action-btn randomize-btn" onClick={handleRandomize} title="Randomize parameters">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
