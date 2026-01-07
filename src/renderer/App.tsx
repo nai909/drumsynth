@@ -178,7 +178,7 @@ const createInitialPattern = (): Pattern => {
     id: '1',
     name: 'Pattern 1',
     tracks,
-    tempo: 120,
+    tempo: 140,
     steps: 16,
   };
 };
