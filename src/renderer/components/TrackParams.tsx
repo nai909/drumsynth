@@ -1,5 +1,6 @@
 import React from 'react';
 import { DrumTrack } from '../types';
+import { INSTRUMENT_DEFAULTS, generateRandomParams } from '../constants/instrumentDefaults';
 import './TrackParams.css';
 
 interface TrackParamsProps {
@@ -12,11 +13,42 @@ const TrackParams: React.FC<TrackParamsProps> = ({ track, onParamChange }) => {
     onParamChange(param, value);
   };
 
+  const handleRandomize = () => {
+    const randomParams = generateRandomParams();
+    Object.entries(randomParams).forEach(([param, value]) => {
+      onParamChange(param as keyof DrumTrack, value);
+    });
+  };
+
+  const handleReset = () => {
+    const defaults = INSTRUMENT_DEFAULTS[track.soundEngine];
+    if (defaults) {
+      Object.entries(defaults).forEach(([param, value]) => {
+        onParamChange(param as keyof DrumTrack, value);
+      });
+    }
+  };
+
   return (
     <div className="track-params">
       <div className="track-params-header">
         <h3 className="track-params-title">{track.name}</h3>
-        <div className="track-params-type">{track.type.toUpperCase()}</div>
+        <div className="track-params-header-right">
+          <button className="param-action-btn randomize-btn" onClick={handleRandomize} title="Randomize parameters">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+            </svg>
+            RANDOM
+          </button>
+          <button className="param-action-btn reset-btn" onClick={handleReset} title="Reset to defaults">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            RESET
+          </button>
+          <div className="track-params-type">{track.type.toUpperCase()}</div>
+        </div>
       </div>
 
       <div className="params-grid">
