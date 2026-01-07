@@ -11,10 +11,23 @@ export class DrumSynth {
   }
 
   async init() {
-    if (this.initialized) return;
-    await Tone.start();
-    this.initialized = true;
-    console.log('Audio engine initialized');
+    // Always try to start/resume audio context on mobile
+    // Mobile browsers can suspend audio context even after initial start
+    try {
+      await Tone.start();
+
+      // Also explicitly resume the audio context if suspended
+      if (Tone.context.state === 'suspended') {
+        await Tone.context.resume();
+      }
+
+      if (!this.initialized) {
+        this.initialized = true;
+        console.log('Audio engine initialized');
+      }
+    } catch (error) {
+      console.error('Failed to initialize audio:', error);
+    }
   }
 
   triggerKick(time: number, velocity: number = 1, tune: number = 0, decay: number = 0.4, filterCutoff: number = 1, pan: number = 0, attack: number = 0.001, tone: number = 0.5, snap: number = 0.3, filterResonance: number = 0.2, drive: number = 0) {

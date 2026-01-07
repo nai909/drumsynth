@@ -221,7 +221,20 @@ const App: React.FC = () => {
 
     sequencerRef.current.setPattern(pattern);
 
+    // Initialize audio on first user interaction (required for mobile)
+    const initAudioOnInteraction = async () => {
+      if (drumSynthRef.current) {
+        await drumSynthRef.current.init();
+      }
+    };
+
+    // Listen for first touch/click to init audio
+    document.addEventListener('touchstart', initAudioOnInteraction, { once: true });
+    document.addEventListener('click', initAudioOnInteraction, { once: true });
+
     return () => {
+      document.removeEventListener('touchstart', initAudioOnInteraction);
+      document.removeEventListener('click', initAudioOnInteraction);
       sequencerRef.current?.dispose();
       drumSynthRef.current?.dispose();
     };
