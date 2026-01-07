@@ -4,10 +4,17 @@ import React from 'react';
 export const DrumIcons: Record<string, React.FC<{ className?: string }>> = {
   'kick': ({ className }) => (
     <svg className={className} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="3"/>
-      <circle cx="32" cy="32" r="18" stroke="currentColor" strokeWidth="2"/>
-      <circle cx="32" cy="32" r="8" fill="currentColor"/>
-      <path d="M32 4V14M32 50V60M4 32H14M50 32H60" stroke="currentColor" strokeWidth="2"/>
+      {/* Drum shell - front view */}
+      <ellipse cx="32" cy="32" rx="28" ry="26" stroke="currentColor" strokeWidth="3"/>
+      {/* Drum head */}
+      <ellipse cx="32" cy="32" rx="22" ry="20" stroke="currentColor" strokeWidth="2"/>
+      {/* Center port hole */}
+      <circle cx="32" cy="32" r="8" stroke="currentColor" strokeWidth="2"/>
+      {/* Lugs on sides */}
+      <rect x="2" y="26" width="6" height="12" rx="2" fill="currentColor"/>
+      <rect x="56" y="26" width="6" height="12" rx="2" fill="currentColor"/>
+      {/* Legs */}
+      <path d="M18 56L14 62M46 56L50 62" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
     </svg>
   ),
   'snare': ({ className }) => (

@@ -87,10 +87,16 @@ const StepSequencer: React.FC<StepSequencerProps> = ({
             className={`step-row ${trackIndex === selectedTrack ? 'selected' : ''}`}
           >
             <button
-              className={`track-label ${trackIndex === selectedTrack ? 'selected' : ''}`}
-              onClick={() => onSelectTrack(trackIndex)}
+              className={`track-icon-btn ${trackIndex === selectedTrack ? 'selected' : ''}`}
+              onClick={() => {
+                onSelectTrack(trackIndex);
+                onPadTrigger(trackIndex, 0.8);
+              }}
+              title={track.name}
             >
-              {track.name}
+              {DrumIcons[track.soundEngine] && (
+                React.createElement(DrumIcons[track.soundEngine], { className: 'track-icon-svg' })
+              )}
             </button>
             <div className="step-buttons">
               {track.steps.map((active, stepIndex) => (
