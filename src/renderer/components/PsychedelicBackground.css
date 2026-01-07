@@ -38,72 +38,6 @@
   }
 }
 
-/* Theme smiley - centered at top */
-.color-picker-wrapper {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.color-picker-smiley {
-  width: 56px;
-  height: 70px;
-  cursor: pointer;
-  filter: drop-shadow(0 0 15px var(--accent-glow));
-  -webkit-filter: drop-shadow(0 0 15px var(--accent-glow));
-  transition: transform 0.2s ease, filter 0.2s ease;
-  animation: smileyPulse 2s ease-in-out infinite;
-}
-
-.color-picker-smiley:hover {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 25px var(--accent-glow));
-  -webkit-filter: drop-shadow(0 0 25px var(--accent-glow));
-}
-
-.color-picker-smiley:active {
-  transform: scale(0.95);
-}
-
-.color-picker-hint {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--accent-secondary);
-  text-shadow: 0 0 10px var(--accent-glow);
-  animation: hintPulse 2s ease-in-out infinite;
-  white-space: nowrap;
-}
-
-@keyframes smileyPulse {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    filter: drop-shadow(0 0 15px var(--accent-glow));
-    -webkit-filter: drop-shadow(0 0 15px var(--accent-glow));
-  }
-  50% {
-    transform: translateY(-3px) scale(1.08);
-    filter: drop-shadow(0 0 25px var(--accent-glow));
-    -webkit-filter: drop-shadow(0 0 25px var(--accent-glow));
-  }
-}
-
-@keyframes hintPulse {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 .smiley-container {
   position: absolute;
   width: 100%;
@@ -356,19 +290,6 @@
   .floating-title {
     font-size: 24px;
     letter-spacing: 4px;
-  }
-
-  .color-picker-wrapper {
-    top: 5px;
-  }
-
-  .color-picker-smiley {
-    width: 44px;
-    height: 55px;
-  }
-
-  .color-picker-hint {
-    font-size: 9px;
   }
 
   .smiley-1, .smiley-2, .smiley-3, .smiley-4,

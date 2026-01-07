@@ -6,8 +6,11 @@ import { Pattern, DrumTrack } from './types';
 import StepSequencer from './components/StepSequencer';
 import Transport from './components/Transport';
 import TrackParams from './components/TrackParams';
-import PsychedelicBackground, { Theme } from './components/PsychedelicBackground';
+import PsychedelicBackground from './components/PsychedelicBackground';
 import './styles/App.css';
+
+const THEMES = ['purple', 'blue', 'red', 'orange', 'green', 'cyan', 'pink'] as const;
+type Theme = typeof THEMES[number];
 
 const createInitialPattern = (): Pattern => {
   const tracks: DrumTrack[] = [
@@ -324,7 +327,19 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <PsychedelicBackground theme={theme} onThemeChange={setTheme} />
+      <PsychedelicBackground />
+      {/* Compact theme selector */}
+      <div className="theme-dots">
+        {THEMES.map((t) => (
+          <button
+            key={t}
+            className={`theme-dot ${theme === t ? 'active' : ''}`}
+            data-theme={t}
+            onClick={() => setTheme(t)}
+            aria-label={`${t} theme`}
+          />
+        ))}
+      </div>
       <div className="main-content">
         <div className="center-section">
           <div className="sequencer-container">
@@ -351,14 +366,16 @@ const App: React.FC = () => {
               mode={mode}
               onPadTrigger={handlePadTrigger}
             />
-            <button
-              className={`params-toggle ${showParams ? 'active' : ''}`}
-              onClick={() => setShowParams(!showParams)}
-            >
-              {showParams ? 'HIDE PARAMETERS' : 'SHOW PARAMETERS'}
-            </button>
+            {mode === 'pad' && (
+              <button
+                className={`params-toggle ${showParams ? 'active' : ''}`}
+                onClick={() => setShowParams(!showParams)}
+              >
+                {showParams ? 'HIDE PARAMETERS' : 'SHOW PARAMETERS'}
+              </button>
+            )}
           </div>
-          {showParams && (
+          {mode === 'pad' && showParams && (
             <TrackParams
               track={pattern.tracks[selectedTrack]}
               onParamChange={handleParamChange}
