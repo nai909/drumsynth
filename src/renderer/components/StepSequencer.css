@@ -12,8 +12,10 @@
 }
 
 .drum-pad {
-  background: linear-gradient(145deg, var(--accent-bg-hover), var(--accent-bg));
-  border: 3px solid var(--accent-border-hover);
+  background: linear-gradient(145deg, var(--accent-bg-hover) 0%, var(--accent-bg) 50%, rgba(0,0,0,0.3) 100%);
+  border: 2px solid var(--accent-border-hover);
+  border-top-color: var(--accent-primary);
+  border-left-color: var(--accent-border);
   border-radius: 12px;
   cursor: pointer;
   display: flex;
@@ -25,19 +27,33 @@
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
+  box-shadow:
+    4px 4px 8px rgba(0, 0, 0, 0.5),
+    -2px -2px 6px rgba(255, 255, 255, 0.05),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.1),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .drum-pad:hover {
-  background: linear-gradient(145deg, var(--accent-bg-active), var(--accent-bg-hover));
+  background: linear-gradient(145deg, var(--accent-bg-active) 0%, var(--accent-bg-hover) 50%, var(--accent-bg) 100%);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 20px var(--accent-bg-hover);
+  box-shadow:
+    6px 6px 12px rgba(0, 0, 0, 0.6),
+    -2px -2px 8px rgba(255, 255, 255, 0.08),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.15),
+    0 0 20px var(--accent-glow);
+  transform: translateY(-2px);
 }
 
 .drum-pad:active {
-  background: linear-gradient(145deg, var(--trigger-bg), var(--trigger-bg));
+  background: linear-gradient(180deg, var(--trigger-bg) 0%, rgba(0,0,0,0.4) 100%);
   border-color: var(--trigger-primary);
-  box-shadow: 0 0 30px var(--trigger-glow), inset 0 0 20px var(--trigger-bg);
-  transform: scale(0.97);
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 8px rgba(0, 0, 0, 0.4),
+    inset -1px -1px 4px var(--trigger-glow),
+    0 0 25px var(--trigger-glow);
+  transform: translateY(2px) scale(0.98);
 }
 
 .drum-pad:active .drum-pad-name {
@@ -46,7 +62,7 @@
 }
 
 .drum-pad.selected {
-  background: linear-gradient(145deg, var(--accent-bg-active), var(--accent-bg-hover));
+  background: linear-gradient(145deg, var(--accent-bg-active) 0%, var(--accent-bg-hover) 50%, var(--accent-bg) 100%);
   border-color: var(--accent-primary);
   box-shadow: 0 0 20px var(--accent-glow);
 }
