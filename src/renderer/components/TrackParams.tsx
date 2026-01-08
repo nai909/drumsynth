@@ -81,20 +81,6 @@ const TrackParams: React.FC<TrackParamsProps> = ({ track, trackIndex, onParamCha
           </div>
 
           <div className="param-control">
-            <label className="param-label">DECAY</label>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={track.decay}
-              onChange={(e) => handleChange('decay', parseFloat(e.target.value))}
-              className="param-slider"
-            />
-            <div className="param-value">{(track.decay * 100).toFixed(0)}</div>
-          </div>
-
-          <div className="param-control">
             <label className="param-label">ATTACK</label>
             <input
               type="range"
@@ -106,6 +92,20 @@ const TrackParams: React.FC<TrackParamsProps> = ({ track, trackIndex, onParamCha
               className="param-slider"
             />
             <div className="param-value">{(track.attack * 100).toFixed(0)}</div>
+          </div>
+
+          <div className="param-control">
+            <label className="param-label">DECAY</label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={track.decay}
+              onChange={(e) => handleChange('decay', parseFloat(e.target.value))}
+              className="param-slider"
+            />
+            <div className="param-value">{(track.decay * 100).toFixed(0)}</div>
           </div>
         </div>
 

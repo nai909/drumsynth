@@ -4,22 +4,30 @@ import './Transport.css';
 interface TransportProps {
   isPlaying: boolean;
   tempo: number;
+  outputGain: number;
   onPlay: () => void;
   onPause: () => void;
   onStop: () => void;
   onTempoChange: (tempo: number) => void;
+  onOutputGainChange: (gain: number) => void;
 }
 
 const Transport: React.FC<TransportProps> = ({
   isPlaying,
   tempo,
+  outputGain,
   onPlay,
   onPause,
   onStop,
   onTempoChange,
+  onOutputGainChange,
 }) => {
   const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onTempoChange(parseInt(e.target.value));
+  };
+
+  const handleOutputGainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onOutputGainChange(parseFloat(e.target.value));
   };
 
   return (
@@ -56,6 +64,20 @@ const Transport: React.FC<TransportProps> = ({
           className="tempo-slider"
         />
         <div className="tempo-display">{tempo} BPM</div>
+      </div>
+
+      <div className="output-control">
+        <label className="output-label">OUTPUT</label>
+        <input
+          type="range"
+          min="0"
+          max="2"
+          step="0.01"
+          value={outputGain}
+          onChange={handleOutputGainChange}
+          className="output-slider"
+        />
+        <div className="output-display">{Math.round(outputGain * 100)}%</div>
       </div>
     </div>
   );

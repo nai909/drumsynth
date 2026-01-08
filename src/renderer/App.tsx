@@ -224,6 +224,10 @@ const App: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState(0);
   const [mode, setMode] = useState<'sequencer' | 'pad' | 'params'>('pad');
+  const [outputGain, setOutputGain] = useState(() => {
+    const saved = localStorage.getItem('drumsynth-output-gain');
+    return saved ? parseFloat(saved) : 1.0;
+  });
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('drumsynth-theme');
     return (saved as Theme) || 'purple';
@@ -245,6 +249,12 @@ const App: React.FC = () => {
   useEffect(() => {
     drumSynthRef.current = new DrumSynth();
     sequencerRef.current = new Sequencer(drumSynthRef.current);
+
+    // Apply saved output gain
+    const savedGain = localStorage.getItem('drumsynth-output-gain');
+    if (savedGain) {
+      drumSynthRef.current.setOutputGain(parseFloat(savedGain));
+    }
 
     sequencerRef.current.onStep((step) => {
       setCurrentStep(step);
@@ -303,6 +313,14 @@ const App: React.FC = () => {
     setPattern({ ...pattern, tempo });
     if (sequencerRef.current) {
       sequencerRef.current.setTempo(tempo);
+    }
+  };
+
+  const handleOutputGainChange = (gain: number) => {
+    setOutputGain(gain);
+    localStorage.setItem('drumsynth-output-gain', gain.toString());
+    if (drumSynthRef.current) {
+      drumSynthRef.current.setOutputGain(gain);
     }
   };
 
@@ -416,10 +434,12 @@ const App: React.FC = () => {
       <Transport
         isPlaying={isPlaying}
         tempo={pattern.tempo}
+        outputGain={outputGain}
         onPlay={handlePlay}
         onPause={handlePause}
         onStop={handleStop}
         onTempoChange={handleTempoChange}
+        onOutputGainChange={handleOutputGainChange}
       />
     </div>
   );
